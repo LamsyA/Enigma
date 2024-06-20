@@ -14,7 +14,7 @@ const COLORS = {
   9: "#fbbf24",
 };
 
-const App = () => {
+const Game = () => {
   const [secretCode, setSecretCode] = useState(Array(CODE_LENGTH).fill(null));
   const [isSettingSecretCode, setIsSettingSecretCode] = useState(true);
   const [guesses, setGuesses] = useState(() =>
@@ -262,4 +262,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Game;
