@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
 import "./Counters.sol";
 
-contract Mastermind is ERC721, ReentrancyGuard {
+contract Mastermind is ERC721 {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenId;

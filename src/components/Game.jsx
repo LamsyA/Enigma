@@ -227,7 +227,7 @@ const Game = () => {
                           fb === "black"
                             ? "#000"
                             : fb === "white"
-                            ? "#fff"
+                            ? "#d946ef"
                             : "#d1d5db",
                       }}
                     ></div>

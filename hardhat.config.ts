@@ -10,12 +10,12 @@ const LINEASCAN_API_KEY = vars.get("LINEASCAN_API_KEY");
 const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.24",
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 1000,
-      },
-    },
+    // settings: {
+    //   optimizer: {
+    //     enabled: true,
+    //     runs: 1000,
+    //   },
+    // },
   },
   etherscan: {
     apiKey: {
@@ -40,10 +40,11 @@ const config: HardhatUserConfig = {
     },
   },
 
-  paths: {
-    artifacts: "./src/abis",
-  },
+  // paths: {
+  //   artifacts: "./src/abis",
+  // },
 };
-// Verifier deployed to 0x70762E20f67F5eFC276dFe9Da337B0e36216C066
-// PrimeAssets deployed to 0x0F6D2a36a6b706e1d50b75FbCc52Bb5E7655aC8C
+// account factory: 0x9AEE3332FC634A982172F2010a3116abC4Ddd0e9
+// contract deployed to 0x9D22c2ac1428117AE5b797092A5995A4e9957072
+// Token deployed to 0x357421A38AD67C365913f3daBa6DD480EfBd0cf4
 export default config;
