@@ -12,62 +12,46 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.bg-gradient {
-  background-color: #ffe999;
-  background-image: radial-gradient(
-      at 16% 94%,
-      hsla(128, 76%, 77%, 1) 0px,
-      transparent 50%
-    ),
-    radial-gradient(at 64% 66%, hsla(100, 68%, 64%, 1) 0px, transparent 50%),
-    radial-gradient(at 69% 50%, hsla(20, 95%, 76%, 1) 0px, transparent 50%),
-    radial-gradient(at 16% 0%, hsla(276, 77%, 78%, 1) 0px, transparent 50%),
-    radial-gradient(at 16% 65%, hsla(205, 61%, 78%, 1) 0px, transparent 50%),
-    radial-gradient(at 46% 8%, hsla(68, 62%, 68%, 1) 0px, transparent 50%),
-    radial-gradient(at 51% 14%, hsla(90, 86%, 68%, 1) 0px, transparent 50%);
-}
-
-.text-gradient {
-  background-color: #fff;
-  background-image: -webkit-linear-gradient(#eee, #333);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
 
 .gradient-bg-hero {
-  background-color: #151c25;
+  /* background-color: #151c25;
   background-image: radial-gradient(
       at 0% 0%,
       hsl(302deg 25% 18%) 0,
       transparent 50%
     ),
     radial-gradient(at 50% 0%, hsl(0deg 39% 30%) 0, transparent 50%),
-    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+    radial-gradient(at 100% 0%, hsla(239, 49%, 30%, 1) 0, transparent 50%); */
+  /* Created with https://www.css-gradient.com */
+  background: #d3ee70;
+  background: -webkit-linear-gradient(top left, #d3ee70, #4d51d5);
+  background: -moz-linear-gradient(top left, #d3ee70, #4d51d5);
+  background: linear-gradient(to bottom right, #d3ee70, #5d51d5);
 }
 
 .gradient-bg-artworks {
-  background-color: #0f0e13;
+  background-color: #151c25;
   background-image: radial-gradient(
       at 50% 50%,
       hsl(302deg 25% 18%) 0,
       transparent 50%
     ),
-    radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
-    radial-gradient(at 50% 50%, hsla(339, 39%, 25%, 1) 0, transparent 50%);
+    radial-gradient(at 0% 0%, hsla(74, 8%, 25%, 0.96) 0, transparent 70%),
+    radial-gradient(at 50% 50%, hsla(236, 47%, 26%, 0.96) 0, transparent 50%);
 }
 
 .gradient-bg-footer {
-  background-color: #151c25;
+  background-color: #5d51d5;
   background-image: radial-gradient(
       at 0% 100%,
-      hsl(0deg 39% 30%) 0,
+      hsl(0deg 26% 20%) 0,
       transparent 53%
     ),
-    radial-gradient(at 50% 150%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+    radial-gradient(at 50% 150%, hsla(239, 49%, 30%, 1) 0, transparent 50%);
 }
 
 .text-gradient {
-  background: -webkit-linear-gradient(#eee, #333);
+  background: -webkit-linear-gradient(#bee901, #e39013);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -95,29 +79,13 @@ body {
   }
 }
 
-.bg-color-1 {
-  background-color: red;
-}
-.bg-color-2 {
-  background-color: blue;
-}
-.bg-color-3 {
-  background-color: green;
-}
-.bg-color-4 {
-  background-color: yellow;
-}
-.bg-color-5 {
-  background-color: orange;
-}
-.bg-color-6 {
-  background-color: purple;
-}
-.bg-black {
-  background-color: black;
-}
-.bg-white {
-  background-color: white;
+/* In your CSS file */
+.groove-outline {
+  border: 4px solid rgb(65, 63, 63);
+  border-top: none; /* No top border to emphasize the groove effect */
+  background-color: #00ff00; /* Adjust as needed */
+  border-radius: 0 0 1rem 1rem; /* Rounded bottom corners */
+  padding: 0.5rem 2rem; /* Adjust padding for desired size */
 }
 
 @tailwind base;

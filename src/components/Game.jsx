@@ -128,9 +128,9 @@ const Game = () => {
   return (
     <div
       className="min-h-screen flex items-center justify-center"
-      style={{ backgroundColor: "#4b2e2e" }}
+      style={{ backgroundColor: "#0F1116" }}
     >
-      <div className="p-4 bg-white shadow-lg rounded">
+      <div className="p-4 bg-amber-800 shadow-lg rounded">
         {isSettingSecretCode ? (
           <div className="mb-4">
             <div className="text-center mb-4">Set the Secret Code</div>

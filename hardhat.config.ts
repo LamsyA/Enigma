@@ -40,9 +40,9 @@ const config: HardhatUserConfig = {
     },
   },
 
-  // paths: {
-  //   artifacts: "./src/abis",
-  // },
+  paths: {
+    artifacts: "./src/abis",
+  },
 };
 // account factory: 0x9AEE3332FC634A982172F2010a3116abC4Ddd0e9
 // contract deployed to 0x9D22c2ac1428117AE5b797092A5995A4e9957072

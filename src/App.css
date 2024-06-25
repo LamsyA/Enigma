@@ -9,7 +9,6 @@
   height: 6em;
   padding: 1.5em;
   will-change: filter;
-  transition: filter 300ms;
 }
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
@@ -41,31 +40,16 @@
   color: #888;
 }
 
-.bg-color-1 {
-  background-color: red;
-}
-.bg-color-2 {
-  background-color: blue;
-}
-.bg-color-3 {
-  background-color: green;
-}
-.bg-color-4 {
-  background-color: yellow;
-}
-.bg-color-5 {
-  background-color: orange;
-}
-.bg-color-6 {
-  background-color: purple;
-}
-.bg-black {
-  background-color: black;
-}
-.bg-white {
-  background-color: white;
+.groove-outline {
+  border: 2px solid red; /* Red outline for the groove */
+  background-color: green; /* Background color for the groove */
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* In your CSS file */
+.groove-outline {
+  border: 2px solid red;
+  border-top: none; /* No top border to emphasize the groove effect */
+  background-color: #00ff00; /* Adjust as needed */
+  border-radius: 0 0 1rem 1rem; /* Rounded bottom corners */
+  padding: 0.5rem 2rem; /* Adjust padding for desired size */
+}
