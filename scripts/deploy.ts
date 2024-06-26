@@ -6,9 +6,9 @@ async function main() {
   const Mastermind = await hre.ethers.getContractFactory("Mastermind");
   const contract = await Mastermind.deploy();
 
-  const contractAddress = await contract.waitForDeployment();
+  const contractAddress = await contract.deployed();
 
-  console.log(`contract deployed to ${contract.target}`);
+  console.log(`contract deployed to ${contract.address}`);
   const filePath = path.join(__dirname, "deployedContractAddress.json");
 
   // Check if the file exists
@@ -24,7 +24,7 @@ async function main() {
 
   // Save the contract address to a JSON file
   const addressData = {
-    MASTERMID_CONTRACT_ADDRESS: contractAddress.target,
+    MASTERMID_CONTRACT_ADDRESS: contractAddress.address,
   };
 
   fs.writeFileSync(filePath, JSON.stringify(addressData, null, 2));

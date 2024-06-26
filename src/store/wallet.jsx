@@ -75,6 +75,24 @@ const _startGame = async ({ code1, code2, code3, code4 }) => {
     reportError(error);
   }
 };
+
+const _makeGuess = async ({ code1, code2, code3, code4 }) => {
+  console.log("testing code ", code1, code2, code3, code4);
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    // const connectedAccount = getGlobalState("connectedAccount");
+    const contract = await getContract();
+    console.log("Code ", [code1, code2, code3, code4]);
+    const start = await contract.makeGuess([code1, code2, code3, code4]);
+    console.log("Created start Game:", start);
+    await start.wait();
+    return true;
+  } catch (error) {
+    console.log(error);
+    reportError(error);
+  }
+};
+
 const setCodeMakerAddress = async () => {
   try {
     if (!ethereum) return alert("Please install Metamask");
@@ -127,6 +145,50 @@ const getCodemaker = async () => {
   }
 };
 
+const getGameActive = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+    const active = await contract.gameActive();
+    console.log("activegame", active);
+    setGlobalState("activegame", active);
+  } catch (error) {
+    reportError(error.message);
+  }
+};
+
+const _getLatestFeedback = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+    const feedback = await contract.getLatestFeedback();
+    const feedbacks = feedback
+      ? [feedback.blackPegs.toString(), feedback.whitePegs.toString()]
+      : [0, 0];
+    console.log("feedback: ", feedbacks);
+    return feedback;
+    // if (feedback === 0) {
+    //   return false;
+    // } else {
+    //   return true;
+    // }
+  } catch (error) {
+    reportError(error.message);
+  }
+};
+
+const getGuess = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+    const guesses = await contract.getGuessesCodes();
+    console.log("guesses", guesses);
+    setGlobalState("guesses", guesses);
+  } catch (error) {
+    reportError(error.message);
+  }
+};
+
 const reportError = (error) => {
   console.log(error.message);
   throw new Error("Error", error);
@@ -137,7 +199,11 @@ export {
   isWalletConnected,
   getContract,
   getCodemaker,
+  _makeGuess,
   _startGame,
   setCodeMakerAddress,
   setCodeBreakerAddress,
+  getGuess,
+  getGameActive,
+  _getLatestFeedback,
 };

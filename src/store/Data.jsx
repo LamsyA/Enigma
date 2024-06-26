@@ -9,8 +9,8 @@ const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   connectedAccount: "",
   maker: null,
   ismaker: false,
-  nfts: [],
-  transactions: [],
+  activegame: false,
+  guesses: [],
 });
 const setAlert = (msg, color = "green") => {
   setGlobalState("loader", { show: false, msg: "" });

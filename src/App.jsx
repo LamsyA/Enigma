@@ -4,7 +4,13 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import { Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getCodemaker, getContract, isWalletConnected } from "./store/wallet";
+import {
+  getCodemaker,
+  getGameActive,
+  getContract,
+  isWalletConnected,
+  _getLatestFeedback,
+} from "./store/wallet";
 import Player from "./components/Player";
 const App = () => {
   const [loaded, setLoaded] = useState(false);
@@ -15,7 +21,9 @@ const App = () => {
       setLoaded(true);
       const result = await isWalletConnected();
       await getContract();
+      await getGameActive();
       await getCodemaker();
+      await _getLatestFeedback();
     };
     loadData();
   }, []);

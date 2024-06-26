@@ -3,50 +3,82 @@
 /* eslint-disable */
 import type {
   BaseContract,
+  BigNumber,
   BigNumberish,
   BytesLike,
-  FunctionFragment,
-  Result,
-  Interface,
-  EventFragment,
-  AddressLike,
-  ContractRunner,
-  ContractMethod,
-  Listener,
+  CallOverrides,
+  ContractTransaction,
+  Overrides,
+  PopulatedTransaction,
+  Signer,
+  utils,
 } from "ethers";
 import type {
-  TypedContractEvent,
-  TypedDeferredTopicFilter,
-  TypedEventLog,
-  TypedLogDescription,
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
+import type {
+  TypedEventFilter,
+  TypedEvent,
   TypedListener,
-  TypedContractMethod,
+  OnEvent,
+  PromiseOrValue,
 } from "../common";
 
 export declare namespace Mastermind {
   export type GuessStruct = {
-    code: BigNumberish[];
-    blackPegs: BigNumberish;
-    whitePegs: BigNumberish;
-    correct: boolean;
+    code: PromiseOrValue<BigNumberish>[];
+    blackPegs: PromiseOrValue<BigNumberish>;
+    whitePegs: PromiseOrValue<BigNumberish>;
+    correct: PromiseOrValue<boolean>;
   };
 
-  export type GuessStructOutput = [
-    code: bigint[],
-    blackPegs: bigint,
-    whitePegs: bigint,
-    correct: boolean
-  ] & {
-    code: bigint[];
-    blackPegs: bigint;
-    whitePegs: bigint;
+  export type GuessStructOutput = [number[], number, number, boolean] & {
+    code: number[];
+    blackPegs: number;
+    whitePegs: number;
     correct: boolean;
   };
 }
 
-export interface MastermindInterface extends Interface {
+export interface MastermindInterface extends utils.Interface {
+  functions: {
+    "approve(address,uint256)": FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
+    "codebreaker()": FunctionFragment;
+    "codemaker()": FunctionFragment;
+    "gameActive()": FunctionFragment;
+    "gameStatus()": FunctionFragment;
+    "getApproved(uint256)": FunctionFragment;
+    "getBreakerScore()": FunctionFragment;
+    "getGuesses()": FunctionFragment;
+    "getGuessesCodes()": FunctionFragment;
+    "getLatestFeedback()": FunctionFragment;
+    "getMakerScore()": FunctionFragment;
+    "guessCount()": FunctionFragment;
+    "guesses(uint256)": FunctionFragment;
+    "isApprovedForAll(address,address)": FunctionFragment;
+    "makeGuess(uint8[])": FunctionFragment;
+    "name()": FunctionFragment;
+    "ownerOf(uint256)": FunctionFragment;
+    "safeTransferFrom(address,address,uint256)": FunctionFragment;
+    "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
+    "scoreCodebreaker()": FunctionFragment;
+    "scoreCodemaker()": FunctionFragment;
+    "setApprovalForAll(address,bool)": FunctionFragment;
+    "setCodebreaker()": FunctionFragment;
+    "setCodemaker()": FunctionFragment;
+    "startGame(uint8[])": FunctionFragment;
+    "supportsInterface(bytes4)": FunctionFragment;
+    "symbol()": FunctionFragment;
+    "tokenURI(uint256)": FunctionFragment;
+    "transferFrom(address,address,uint256)": FunctionFragment;
+  };
+
   getFunction(
-    nameOrSignature:
+    nameOrSignatureOrTopic:
       | "approve"
       | "balanceOf"
       | "codebreaker"
@@ -56,6 +88,8 @@ export interface MastermindInterface extends Interface {
       | "getApproved"
       | "getBreakerScore"
       | "getGuesses"
+      | "getGuessesCodes"
+      | "getLatestFeedback"
       | "getMakerScore"
       | "guessCount"
       | "guesses"
@@ -77,27 +111,13 @@ export interface MastermindInterface extends Interface {
       | "transferFrom"
   ): FunctionFragment;
 
-  getEvent(
-    nameOrSignatureOrTopic:
-      | "Approval"
-      | "ApprovalForAll"
-      | "CodebreakerSet"
-      | "CodemakerSet"
-      | "GameEnded"
-      | "GameStarted"
-      | "GameStatusChanged"
-      | "GuessMade"
-      | "ScoreUpdated"
-      | "Transfer"
-  ): EventFragment;
-
   encodeFunctionData(
     functionFragment: "approve",
-    values: [AddressLike, BigNumberish]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "balanceOf",
-    values: [AddressLike]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "codebreaker",
@@ -114,7 +134,7 @@ export interface MastermindInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getBreakerScore",
@@ -122,6 +142,14 @@ export interface MastermindInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getGuesses",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getGuessesCodes",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getLatestFeedback",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -134,28 +162,37 @@ export interface MastermindInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "guesses",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
-    values: [AddressLike, AddressLike]
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "makeGuess",
-    values: [BigNumberish[]]
+    values: [PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
-    values: [AddressLike, AddressLike, BigNumberish]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256,bytes)",
-    values: [AddressLike, AddressLike, BigNumberish, BytesLike]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "scoreCodebreaker",
@@ -167,7 +204,7 @@ export interface MastermindInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setApprovalForAll",
-    values: [AddressLike, boolean]
+    values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
   encodeFunctionData(
     functionFragment: "setCodebreaker",
@@ -179,20 +216,24 @@ export interface MastermindInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "startGame",
-    values: [BigNumberish[]]
+    values: [PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
-    values: [BytesLike]
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "tokenURI",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "transferFrom",
-    values: [AddressLike, AddressLike, BigNumberish]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
@@ -213,6 +254,14 @@ export interface MastermindInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getGuesses", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getGuessesCodes",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getLatestFeedback",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getMakerScore",
     data: BytesLike
@@ -265,642 +314,896 @@ export interface MastermindInterface extends Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
+
+  events: {
+    "Approval(address,address,uint256)": EventFragment;
+    "ApprovalForAll(address,address,bool)": EventFragment;
+    "CodebreakerSet(address,uint256)": EventFragment;
+    "CodemakerSet(address,uint256)": EventFragment;
+    "GameEnded(address,uint256)": EventFragment;
+    "GameStarted(address,uint256)": EventFragment;
+    "GameStatusChanged(uint8,uint256)": EventFragment;
+    "GuessMade(address,uint8[],uint8,uint8,bool,uint256)": EventFragment;
+    "ScoreUpdated(uint256,uint256,uint256)": EventFragment;
+    "Transfer(address,address,uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CodebreakerSet"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CodemakerSet"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GameEnded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GameStarted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GameStatusChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "GuessMade"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ScoreUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
-export namespace ApprovalEvent {
-  export type InputTuple = [
-    owner: AddressLike,
-    approved: AddressLike,
-    tokenId: BigNumberish
-  ];
-  export type OutputTuple = [owner: string, approved: string, tokenId: bigint];
-  export interface OutputObject {
-    owner: string;
-    approved: string;
-    tokenId: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface ApprovalEventObject {
+  owner: string;
+  approved: string;
+  tokenId: BigNumber;
 }
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber],
+  ApprovalEventObject
+>;
 
-export namespace ApprovalForAllEvent {
-  export type InputTuple = [
-    owner: AddressLike,
-    operator: AddressLike,
-    approved: boolean
-  ];
-  export type OutputTuple = [
-    owner: string,
-    operator: string,
-    approved: boolean
-  ];
-  export interface OutputObject {
-    owner: string;
-    operator: string;
-    approved: boolean;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
+export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
 
-export namespace CodebreakerSetEvent {
-  export type InputTuple = [codebreaker: AddressLike, timestamp: BigNumberish];
-  export type OutputTuple = [codebreaker: string, timestamp: bigint];
-  export interface OutputObject {
-    codebreaker: string;
-    timestamp: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface ApprovalForAllEventObject {
+  owner: string;
+  operator: string;
+  approved: boolean;
 }
+export type ApprovalForAllEvent = TypedEvent<
+  [string, string, boolean],
+  ApprovalForAllEventObject
+>;
 
-export namespace CodemakerSetEvent {
-  export type InputTuple = [codemaker: AddressLike, timestamp: BigNumberish];
-  export type OutputTuple = [codemaker: string, timestamp: bigint];
-  export interface OutputObject {
-    codemaker: string;
-    timestamp: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
+export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
 
-export namespace GameEndedEvent {
-  export type InputTuple = [winner: AddressLike, timestamp: BigNumberish];
-  export type OutputTuple = [winner: string, timestamp: bigint];
-  export interface OutputObject {
-    winner: string;
-    timestamp: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface CodebreakerSetEventObject {
+  codebreaker: string;
+  timestamp: BigNumber;
 }
+export type CodebreakerSetEvent = TypedEvent<
+  [string, BigNumber],
+  CodebreakerSetEventObject
+>;
 
-export namespace GameStartedEvent {
-  export type InputTuple = [codemaker: AddressLike, timestamp: BigNumberish];
-  export type OutputTuple = [codemaker: string, timestamp: bigint];
-  export interface OutputObject {
-    codemaker: string;
-    timestamp: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
+export type CodebreakerSetEventFilter = TypedEventFilter<CodebreakerSetEvent>;
 
-export namespace GameStatusChangedEvent {
-  export type InputTuple = [status: BigNumberish, timestamp: BigNumberish];
-  export type OutputTuple = [status: bigint, timestamp: bigint];
-  export interface OutputObject {
-    status: bigint;
-    timestamp: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface CodemakerSetEventObject {
+  codemaker: string;
+  timestamp: BigNumber;
 }
+export type CodemakerSetEvent = TypedEvent<
+  [string, BigNumber],
+  CodemakerSetEventObject
+>;
 
-export namespace GuessMadeEvent {
-  export type InputTuple = [
-    codebreaker: AddressLike,
-    guess: BigNumberish[],
-    blackPegs: BigNumberish,
-    whitePegs: BigNumberish,
-    correct: boolean,
-    timestamp: BigNumberish
-  ];
-  export type OutputTuple = [
-    codebreaker: string,
-    guess: bigint[],
-    blackPegs: bigint,
-    whitePegs: bigint,
-    correct: boolean,
-    timestamp: bigint
-  ];
-  export interface OutputObject {
-    codebreaker: string;
-    guess: bigint[];
-    blackPegs: bigint;
-    whitePegs: bigint;
-    correct: boolean;
-    timestamp: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
+export type CodemakerSetEventFilter = TypedEventFilter<CodemakerSetEvent>;
 
-export namespace ScoreUpdatedEvent {
-  export type InputTuple = [
-    scoreCodebreaker: BigNumberish,
-    scoreCodemaker: BigNumberish,
-    timestamp: BigNumberish
-  ];
-  export type OutputTuple = [
-    scoreCodebreaker: bigint,
-    scoreCodemaker: bigint,
-    timestamp: bigint
-  ];
-  export interface OutputObject {
-    scoreCodebreaker: bigint;
-    scoreCodemaker: bigint;
-    timestamp: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface GameEndedEventObject {
+  winner: string;
+  timestamp: BigNumber;
 }
+export type GameEndedEvent = TypedEvent<
+  [string, BigNumber],
+  GameEndedEventObject
+>;
 
-export namespace TransferEvent {
-  export type InputTuple = [
-    from: AddressLike,
-    to: AddressLike,
-    tokenId: BigNumberish
-  ];
-  export type OutputTuple = [from: string, to: string, tokenId: bigint];
-  export interface OutputObject {
-    from: string;
-    to: string;
-    tokenId: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export type GameEndedEventFilter = TypedEventFilter<GameEndedEvent>;
+
+export interface GameStartedEventObject {
+  codemaker: string;
+  timestamp: BigNumber;
 }
+export type GameStartedEvent = TypedEvent<
+  [string, BigNumber],
+  GameStartedEventObject
+>;
+
+export type GameStartedEventFilter = TypedEventFilter<GameStartedEvent>;
+
+export interface GameStatusChangedEventObject {
+  status: number;
+  timestamp: BigNumber;
+}
+export type GameStatusChangedEvent = TypedEvent<
+  [number, BigNumber],
+  GameStatusChangedEventObject
+>;
+
+export type GameStatusChangedEventFilter =
+  TypedEventFilter<GameStatusChangedEvent>;
+
+export interface GuessMadeEventObject {
+  codebreaker: string;
+  guess: number[];
+  blackPegs: number;
+  whitePegs: number;
+  correct: boolean;
+  timestamp: BigNumber;
+}
+export type GuessMadeEvent = TypedEvent<
+  [string, number[], number, number, boolean, BigNumber],
+  GuessMadeEventObject
+>;
+
+export type GuessMadeEventFilter = TypedEventFilter<GuessMadeEvent>;
+
+export interface ScoreUpdatedEventObject {
+  scoreCodebreaker: BigNumber;
+  scoreCodemaker: BigNumber;
+  timestamp: BigNumber;
+}
+export type ScoreUpdatedEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber],
+  ScoreUpdatedEventObject
+>;
+
+export type ScoreUpdatedEventFilter = TypedEventFilter<ScoreUpdatedEvent>;
+
+export interface TransferEventObject {
+  from: string;
+  to: string;
+  tokenId: BigNumber;
+}
+export type TransferEvent = TypedEvent<
+  [string, string, BigNumber],
+  TransferEventObject
+>;
+
+export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
 export interface Mastermind extends BaseContract {
-  connect(runner?: ContractRunner | null): Mastermind;
-  waitForDeployment(): Promise<this>;
+  connect(signerOrProvider: Signer | Provider | string): this;
+  attach(addressOrName: string): this;
+  deployed(): Promise<this>;
 
   interface: MastermindInterface;
 
-  queryFilter<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
+  queryFilter<TEvent extends TypedEvent>(
+    event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
-  queryFilter<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
+  ): Promise<Array<TEvent>>;
 
-  on<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  on<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  listeners<TEvent extends TypedEvent>(
+    eventFilter?: TypedEventFilter<TEvent>
+  ): Array<TypedListener<TEvent>>;
+  listeners(eventName?: string): Array<Listener>;
+  removeAllListeners<TEvent extends TypedEvent>(
+    eventFilter: TypedEventFilter<TEvent>
+  ): this;
+  removeAllListeners(eventName?: string): this;
+  off: OnEvent<this>;
+  on: OnEvent<this>;
+  once: OnEvent<this>;
+  removeListener: OnEvent<this>;
 
-  once<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  once<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  functions: {
+    approve(
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  listeners<TCEvent extends TypedContractEvent>(
-    event: TCEvent
-  ): Promise<Array<TypedListener<TCEvent>>>;
-  listeners(eventName?: string): Promise<Array<Listener>>;
-  removeAllListeners<TCEvent extends TypedContractEvent>(
-    event?: TCEvent
-  ): Promise<this>;
+    balanceOf(
+      owner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-  approve: TypedContractMethod<
-    [to: AddressLike, tokenId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
+    codebreaker(overrides?: CallOverrides): Promise<[string]>;
 
-  balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+    codemaker(overrides?: CallOverrides): Promise<[string]>;
 
-  codebreaker: TypedContractMethod<[], [string], "view">;
+    gameActive(overrides?: CallOverrides): Promise<[boolean]>;
 
-  codemaker: TypedContractMethod<[], [string], "view">;
+    gameStatus(overrides?: CallOverrides): Promise<[number]>;
 
-  gameActive: TypedContractMethod<[], [boolean], "view">;
+    getApproved(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
-  gameStatus: TypedContractMethod<[], [bigint], "view">;
+    getBreakerScore(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-  getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+    getGuesses(
+      overrides?: CallOverrides
+    ): Promise<[Mastermind.GuessStructOutput[]]>;
 
-  getBreakerScore: TypedContractMethod<[], [bigint], "view">;
+    getGuessesCodes(overrides?: CallOverrides): Promise<[number[][]]>;
 
-  getGuesses: TypedContractMethod<[], [Mastermind.GuessStructOutput[]], "view">;
+    getLatestFeedback(
+      overrides?: CallOverrides
+    ): Promise<[number, number] & { blackPegs: number; whitePegs: number }>;
 
-  getMakerScore: TypedContractMethod<[], [bigint], "view">;
+    getMakerScore(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-  guessCount: TypedContractMethod<[], [bigint], "view">;
+    guessCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-  guesses: TypedContractMethod<
-    [arg0: BigNumberish],
-    [
-      [bigint, bigint, boolean] & {
-        blackPegs: bigint;
-        whitePegs: bigint;
+    guesses(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [number, number, boolean] & {
+        blackPegs: number;
+        whitePegs: number;
         correct: boolean;
       }
-    ],
-    "view"
+    >;
+
+    isApprovedForAll(
+      owner: PromiseOrValue<string>,
+      operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    makeGuess(
+      _guess: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    name(overrides?: CallOverrides): Promise<[string]>;
+
+    ownerOf(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    "safeTransferFrom(address,address,uint256)"(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    "safeTransferFrom(address,address,uint256,bytes)"(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    scoreCodebreaker(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    scoreCodemaker(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    setApprovalForAll(
+      operator: PromiseOrValue<string>,
+      approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setCodebreaker(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setCodemaker(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    startGame(
+      _secretCode: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    symbol(overrides?: CallOverrides): Promise<[string]>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    transferFrom(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+  };
+
+  approve(
+    to: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  balanceOf(
+    owner: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  codebreaker(overrides?: CallOverrides): Promise<string>;
+
+  codemaker(overrides?: CallOverrides): Promise<string>;
+
+  gameActive(overrides?: CallOverrides): Promise<boolean>;
+
+  gameStatus(overrides?: CallOverrides): Promise<number>;
+
+  getApproved(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getBreakerScore(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getGuesses(
+    overrides?: CallOverrides
+  ): Promise<Mastermind.GuessStructOutput[]>;
+
+  getGuessesCodes(overrides?: CallOverrides): Promise<number[][]>;
+
+  getLatestFeedback(
+    overrides?: CallOverrides
+  ): Promise<[number, number] & { blackPegs: number; whitePegs: number }>;
+
+  getMakerScore(overrides?: CallOverrides): Promise<BigNumber>;
+
+  guessCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+  guesses(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<
+    [number, number, boolean] & {
+      blackPegs: number;
+      whitePegs: number;
+      correct: boolean;
+    }
   >;
 
-  isApprovedForAll: TypedContractMethod<
-    [owner: AddressLike, operator: AddressLike],
-    [boolean],
-    "view"
-  >;
+  isApprovedForAll(
+    owner: PromiseOrValue<string>,
+    operator: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
-  makeGuess: TypedContractMethod<
-    [_guess: BigNumberish[]],
-    [void],
-    "nonpayable"
-  >;
+  makeGuess(
+    _guess: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  name: TypedContractMethod<[], [string], "view">;
+  name(overrides?: CallOverrides): Promise<string>;
 
-  ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+  ownerOf(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
-  "safeTransferFrom(address,address,uint256)": TypedContractMethod<
-    [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
+  "safeTransferFrom(address,address,uint256)"(
+    from: PromiseOrValue<string>,
+    to: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  "safeTransferFrom(address,address,uint256,bytes)": TypedContractMethod<
-    [
-      from: AddressLike,
-      to: AddressLike,
-      tokenId: BigNumberish,
-      data: BytesLike
-    ],
-    [void],
-    "nonpayable"
-  >;
+  "safeTransferFrom(address,address,uint256,bytes)"(
+    from: PromiseOrValue<string>,
+    to: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  scoreCodebreaker: TypedContractMethod<[], [bigint], "view">;
+  scoreCodebreaker(overrides?: CallOverrides): Promise<BigNumber>;
 
-  scoreCodemaker: TypedContractMethod<[], [bigint], "view">;
+  scoreCodemaker(overrides?: CallOverrides): Promise<BigNumber>;
 
-  setApprovalForAll: TypedContractMethod<
-    [operator: AddressLike, approved: boolean],
-    [void],
-    "nonpayable"
-  >;
+  setApprovalForAll(
+    operator: PromiseOrValue<string>,
+    approved: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  setCodebreaker: TypedContractMethod<[], [void], "nonpayable">;
+  setCodebreaker(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  setCodemaker: TypedContractMethod<[], [void], "nonpayable">;
+  setCodemaker(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  startGame: TypedContractMethod<
-    [_secretCode: BigNumberish[]],
-    [void],
-    "nonpayable"
-  >;
+  startGame(
+    _secretCode: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  supportsInterface: TypedContractMethod<
-    [interfaceId: BytesLike],
-    [boolean],
-    "view"
-  >;
+  supportsInterface(
+    interfaceId: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
-  symbol: TypedContractMethod<[], [string], "view">;
+  symbol(overrides?: CallOverrides): Promise<string>;
 
-  tokenURI: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+  tokenURI(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
-  transferFrom: TypedContractMethod<
-    [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
+  transferFrom(
+    from: PromiseOrValue<string>,
+    to: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  getFunction<T extends ContractMethod = ContractMethod>(
-    key: string | FunctionFragment
-  ): T;
+  callStatic: {
+    approve(
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-  getFunction(
-    nameOrSignature: "approve"
-  ): TypedContractMethod<
-    [to: AddressLike, tokenId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "balanceOf"
-  ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "codebreaker"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "codemaker"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "gameActive"
-  ): TypedContractMethod<[], [boolean], "view">;
-  getFunction(
-    nameOrSignature: "gameStatus"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "getApproved"
-  ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-  getFunction(
-    nameOrSignature: "getBreakerScore"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "getGuesses"
-  ): TypedContractMethod<[], [Mastermind.GuessStructOutput[]], "view">;
-  getFunction(
-    nameOrSignature: "getMakerScore"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "guessCount"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "guesses"
-  ): TypedContractMethod<
-    [arg0: BigNumberish],
-    [
-      [bigint, bigint, boolean] & {
-        blackPegs: bigint;
-        whitePegs: bigint;
+    balanceOf(
+      owner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    codebreaker(overrides?: CallOverrides): Promise<string>;
+
+    codemaker(overrides?: CallOverrides): Promise<string>;
+
+    gameActive(overrides?: CallOverrides): Promise<boolean>;
+
+    gameStatus(overrides?: CallOverrides): Promise<number>;
+
+    getApproved(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getBreakerScore(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getGuesses(
+      overrides?: CallOverrides
+    ): Promise<Mastermind.GuessStructOutput[]>;
+
+    getGuessesCodes(overrides?: CallOverrides): Promise<number[][]>;
+
+    getLatestFeedback(
+      overrides?: CallOverrides
+    ): Promise<[number, number] & { blackPegs: number; whitePegs: number }>;
+
+    getMakerScore(overrides?: CallOverrides): Promise<BigNumber>;
+
+    guessCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    guesses(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [number, number, boolean] & {
+        blackPegs: number;
+        whitePegs: number;
         correct: boolean;
       }
-    ],
-    "view"
-  >;
-  getFunction(
-    nameOrSignature: "isApprovedForAll"
-  ): TypedContractMethod<
-    [owner: AddressLike, operator: AddressLike],
-    [boolean],
-    "view"
-  >;
-  getFunction(
-    nameOrSignature: "makeGuess"
-  ): TypedContractMethod<[_guess: BigNumberish[]], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "name"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "ownerOf"
-  ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-  getFunction(
-    nameOrSignature: "safeTransferFrom(address,address,uint256)"
-  ): TypedContractMethod<
-    [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "safeTransferFrom(address,address,uint256,bytes)"
-  ): TypedContractMethod<
-    [
-      from: AddressLike,
-      to: AddressLike,
-      tokenId: BigNumberish,
-      data: BytesLike
-    ],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "scoreCodebreaker"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "scoreCodemaker"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "setApprovalForAll"
-  ): TypedContractMethod<
-    [operator: AddressLike, approved: boolean],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "setCodebreaker"
-  ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "setCodemaker"
-  ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "startGame"
-  ): TypedContractMethod<[_secretCode: BigNumberish[]], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "supportsInterface"
-  ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
-  getFunction(
-    nameOrSignature: "symbol"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "tokenURI"
-  ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-  getFunction(
-    nameOrSignature: "transferFrom"
-  ): TypedContractMethod<
-    [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
+    >;
 
-  getEvent(
-    key: "Approval"
-  ): TypedContractEvent<
-    ApprovalEvent.InputTuple,
-    ApprovalEvent.OutputTuple,
-    ApprovalEvent.OutputObject
-  >;
-  getEvent(
-    key: "ApprovalForAll"
-  ): TypedContractEvent<
-    ApprovalForAllEvent.InputTuple,
-    ApprovalForAllEvent.OutputTuple,
-    ApprovalForAllEvent.OutputObject
-  >;
-  getEvent(
-    key: "CodebreakerSet"
-  ): TypedContractEvent<
-    CodebreakerSetEvent.InputTuple,
-    CodebreakerSetEvent.OutputTuple,
-    CodebreakerSetEvent.OutputObject
-  >;
-  getEvent(
-    key: "CodemakerSet"
-  ): TypedContractEvent<
-    CodemakerSetEvent.InputTuple,
-    CodemakerSetEvent.OutputTuple,
-    CodemakerSetEvent.OutputObject
-  >;
-  getEvent(
-    key: "GameEnded"
-  ): TypedContractEvent<
-    GameEndedEvent.InputTuple,
-    GameEndedEvent.OutputTuple,
-    GameEndedEvent.OutputObject
-  >;
-  getEvent(
-    key: "GameStarted"
-  ): TypedContractEvent<
-    GameStartedEvent.InputTuple,
-    GameStartedEvent.OutputTuple,
-    GameStartedEvent.OutputObject
-  >;
-  getEvent(
-    key: "GameStatusChanged"
-  ): TypedContractEvent<
-    GameStatusChangedEvent.InputTuple,
-    GameStatusChangedEvent.OutputTuple,
-    GameStatusChangedEvent.OutputObject
-  >;
-  getEvent(
-    key: "GuessMade"
-  ): TypedContractEvent<
-    GuessMadeEvent.InputTuple,
-    GuessMadeEvent.OutputTuple,
-    GuessMadeEvent.OutputObject
-  >;
-  getEvent(
-    key: "ScoreUpdated"
-  ): TypedContractEvent<
-    ScoreUpdatedEvent.InputTuple,
-    ScoreUpdatedEvent.OutputTuple,
-    ScoreUpdatedEvent.OutputObject
-  >;
-  getEvent(
-    key: "Transfer"
-  ): TypedContractEvent<
-    TransferEvent.InputTuple,
-    TransferEvent.OutputTuple,
-    TransferEvent.OutputObject
-  >;
+    isApprovedForAll(
+      owner: PromiseOrValue<string>,
+      operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    makeGuess(
+      _guess: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    name(overrides?: CallOverrides): Promise<string>;
+
+    ownerOf(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    "safeTransferFrom(address,address,uint256)"(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    "safeTransferFrom(address,address,uint256,bytes)"(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    scoreCodebreaker(overrides?: CallOverrides): Promise<BigNumber>;
+
+    scoreCodemaker(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setApprovalForAll(
+      operator: PromiseOrValue<string>,
+      approved: PromiseOrValue<boolean>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setCodebreaker(overrides?: CallOverrides): Promise<void>;
+
+    setCodemaker(overrides?: CallOverrides): Promise<void>;
+
+    startGame(
+      _secretCode: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    symbol(overrides?: CallOverrides): Promise<string>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    transferFrom(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+  };
 
   filters: {
-    "Approval(address,address,uint256)": TypedContractEvent<
-      ApprovalEvent.InputTuple,
-      ApprovalEvent.OutputTuple,
-      ApprovalEvent.OutputObject
-    >;
-    Approval: TypedContractEvent<
-      ApprovalEvent.InputTuple,
-      ApprovalEvent.OutputTuple,
-      ApprovalEvent.OutputObject
-    >;
+    "Approval(address,address,uint256)"(
+      owner?: PromiseOrValue<string> | null,
+      approved?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): ApprovalEventFilter;
+    Approval(
+      owner?: PromiseOrValue<string> | null,
+      approved?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): ApprovalEventFilter;
 
-    "ApprovalForAll(address,address,bool)": TypedContractEvent<
-      ApprovalForAllEvent.InputTuple,
-      ApprovalForAllEvent.OutputTuple,
-      ApprovalForAllEvent.OutputObject
-    >;
-    ApprovalForAll: TypedContractEvent<
-      ApprovalForAllEvent.InputTuple,
-      ApprovalForAllEvent.OutputTuple,
-      ApprovalForAllEvent.OutputObject
-    >;
+    "ApprovalForAll(address,address,bool)"(
+      owner?: PromiseOrValue<string> | null,
+      operator?: PromiseOrValue<string> | null,
+      approved?: null
+    ): ApprovalForAllEventFilter;
+    ApprovalForAll(
+      owner?: PromiseOrValue<string> | null,
+      operator?: PromiseOrValue<string> | null,
+      approved?: null
+    ): ApprovalForAllEventFilter;
 
-    "CodebreakerSet(address,uint256)": TypedContractEvent<
-      CodebreakerSetEvent.InputTuple,
-      CodebreakerSetEvent.OutputTuple,
-      CodebreakerSetEvent.OutputObject
-    >;
-    CodebreakerSet: TypedContractEvent<
-      CodebreakerSetEvent.InputTuple,
-      CodebreakerSetEvent.OutputTuple,
-      CodebreakerSetEvent.OutputObject
-    >;
+    "CodebreakerSet(address,uint256)"(
+      codebreaker?: PromiseOrValue<string> | null,
+      timestamp?: null
+    ): CodebreakerSetEventFilter;
+    CodebreakerSet(
+      codebreaker?: PromiseOrValue<string> | null,
+      timestamp?: null
+    ): CodebreakerSetEventFilter;
 
-    "CodemakerSet(address,uint256)": TypedContractEvent<
-      CodemakerSetEvent.InputTuple,
-      CodemakerSetEvent.OutputTuple,
-      CodemakerSetEvent.OutputObject
-    >;
-    CodemakerSet: TypedContractEvent<
-      CodemakerSetEvent.InputTuple,
-      CodemakerSetEvent.OutputTuple,
-      CodemakerSetEvent.OutputObject
-    >;
+    "CodemakerSet(address,uint256)"(
+      codemaker?: PromiseOrValue<string> | null,
+      timestamp?: null
+    ): CodemakerSetEventFilter;
+    CodemakerSet(
+      codemaker?: PromiseOrValue<string> | null,
+      timestamp?: null
+    ): CodemakerSetEventFilter;
 
-    "GameEnded(address,uint256)": TypedContractEvent<
-      GameEndedEvent.InputTuple,
-      GameEndedEvent.OutputTuple,
-      GameEndedEvent.OutputObject
-    >;
-    GameEnded: TypedContractEvent<
-      GameEndedEvent.InputTuple,
-      GameEndedEvent.OutputTuple,
-      GameEndedEvent.OutputObject
-    >;
+    "GameEnded(address,uint256)"(
+      winner?: PromiseOrValue<string> | null,
+      timestamp?: null
+    ): GameEndedEventFilter;
+    GameEnded(
+      winner?: PromiseOrValue<string> | null,
+      timestamp?: null
+    ): GameEndedEventFilter;
 
-    "GameStarted(address,uint256)": TypedContractEvent<
-      GameStartedEvent.InputTuple,
-      GameStartedEvent.OutputTuple,
-      GameStartedEvent.OutputObject
-    >;
-    GameStarted: TypedContractEvent<
-      GameStartedEvent.InputTuple,
-      GameStartedEvent.OutputTuple,
-      GameStartedEvent.OutputObject
-    >;
+    "GameStarted(address,uint256)"(
+      codemaker?: PromiseOrValue<string> | null,
+      timestamp?: null
+    ): GameStartedEventFilter;
+    GameStarted(
+      codemaker?: PromiseOrValue<string> | null,
+      timestamp?: null
+    ): GameStartedEventFilter;
 
-    "GameStatusChanged(uint8,uint256)": TypedContractEvent<
-      GameStatusChangedEvent.InputTuple,
-      GameStatusChangedEvent.OutputTuple,
-      GameStatusChangedEvent.OutputObject
-    >;
-    GameStatusChanged: TypedContractEvent<
-      GameStatusChangedEvent.InputTuple,
-      GameStatusChangedEvent.OutputTuple,
-      GameStatusChangedEvent.OutputObject
-    >;
+    "GameStatusChanged(uint8,uint256)"(
+      status?: null,
+      timestamp?: null
+    ): GameStatusChangedEventFilter;
+    GameStatusChanged(
+      status?: null,
+      timestamp?: null
+    ): GameStatusChangedEventFilter;
 
-    "GuessMade(address,uint8[],uint8,uint8,bool,uint256)": TypedContractEvent<
-      GuessMadeEvent.InputTuple,
-      GuessMadeEvent.OutputTuple,
-      GuessMadeEvent.OutputObject
-    >;
-    GuessMade: TypedContractEvent<
-      GuessMadeEvent.InputTuple,
-      GuessMadeEvent.OutputTuple,
-      GuessMadeEvent.OutputObject
-    >;
+    "GuessMade(address,uint8[],uint8,uint8,bool,uint256)"(
+      codebreaker?: PromiseOrValue<string> | null,
+      guess?: null,
+      blackPegs?: null,
+      whitePegs?: null,
+      correct?: null,
+      timestamp?: null
+    ): GuessMadeEventFilter;
+    GuessMade(
+      codebreaker?: PromiseOrValue<string> | null,
+      guess?: null,
+      blackPegs?: null,
+      whitePegs?: null,
+      correct?: null,
+      timestamp?: null
+    ): GuessMadeEventFilter;
 
-    "ScoreUpdated(uint256,uint256,uint256)": TypedContractEvent<
-      ScoreUpdatedEvent.InputTuple,
-      ScoreUpdatedEvent.OutputTuple,
-      ScoreUpdatedEvent.OutputObject
-    >;
-    ScoreUpdated: TypedContractEvent<
-      ScoreUpdatedEvent.InputTuple,
-      ScoreUpdatedEvent.OutputTuple,
-      ScoreUpdatedEvent.OutputObject
-    >;
+    "ScoreUpdated(uint256,uint256,uint256)"(
+      scoreCodebreaker?: null,
+      scoreCodemaker?: null,
+      timestamp?: null
+    ): ScoreUpdatedEventFilter;
+    ScoreUpdated(
+      scoreCodebreaker?: null,
+      scoreCodemaker?: null,
+      timestamp?: null
+    ): ScoreUpdatedEventFilter;
 
-    "Transfer(address,address,uint256)": TypedContractEvent<
-      TransferEvent.InputTuple,
-      TransferEvent.OutputTuple,
-      TransferEvent.OutputObject
-    >;
-    Transfer: TypedContractEvent<
-      TransferEvent.InputTuple,
-      TransferEvent.OutputTuple,
-      TransferEvent.OutputObject
-    >;
+    "Transfer(address,address,uint256)"(
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): TransferEventFilter;
+    Transfer(
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): TransferEventFilter;
+  };
+
+  estimateGas: {
+    approve(
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    balanceOf(
+      owner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    codebreaker(overrides?: CallOverrides): Promise<BigNumber>;
+
+    codemaker(overrides?: CallOverrides): Promise<BigNumber>;
+
+    gameActive(overrides?: CallOverrides): Promise<BigNumber>;
+
+    gameStatus(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getApproved(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getBreakerScore(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getGuesses(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getGuessesCodes(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getLatestFeedback(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMakerScore(overrides?: CallOverrides): Promise<BigNumber>;
+
+    guessCount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    guesses(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isApprovedForAll(
+      owner: PromiseOrValue<string>,
+      operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    makeGuess(
+      _guess: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    ownerOf(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "safeTransferFrom(address,address,uint256)"(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    "safeTransferFrom(address,address,uint256,bytes)"(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    scoreCodebreaker(overrides?: CallOverrides): Promise<BigNumber>;
+
+    scoreCodemaker(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setApprovalForAll(
+      operator: PromiseOrValue<string>,
+      approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setCodebreaker(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setCodemaker(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    startGame(
+      _secretCode: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    transferFrom(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+  };
+
+  populateTransaction: {
+    approve(
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    balanceOf(
+      owner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    codebreaker(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    codemaker(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    gameActive(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    gameStatus(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getApproved(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getBreakerScore(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getGuesses(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getGuessesCodes(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getLatestFeedback(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getMakerScore(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    guessCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    guesses(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isApprovedForAll(
+      owner: PromiseOrValue<string>,
+      operator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    makeGuess(
+      _guess: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    ownerOf(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "safeTransferFrom(address,address,uint256)"(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "safeTransferFrom(address,address,uint256,bytes)"(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    scoreCodebreaker(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    scoreCodemaker(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setApprovalForAll(
+      operator: PromiseOrValue<string>,
+      approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setCodebreaker(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setCodemaker(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    startGame(
+      _secretCode: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    transferFrom(
+      from: PromiseOrValue<string>,
+      to: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
   };
 }

@@ -163,21 +163,7 @@ contract Mastermind is ERC721 {
         }
     }
 
-    function getGuesses() public view returns (Guess[] memory) {
-        return guesses;
-    }
-
-    function getMakerScore() public view returns (uint) {
-        return scoreCodemaker;
-    }
-
-    function getBreakerScore() public view returns (uint) {
-        return scoreCodebreaker;
-    }
-
-    function _baseURI() internal pure override returns (string memory) {
-        return "data:application/json;base64,";
-    }
+    
 
 function tokenURI(uint256 tokenId) public view override returns (string memory) {
     string memory gameResult = gameStatus == GameStatus.Won ? "Won" : "Lost";
@@ -224,37 +210,22 @@ function char(bytes1 b) internal pure returns (bytes1 c) {
 function generateSVGImage(string memory gameResult, uint256 tokenId) internal pure returns (string memory) {
     string memory svg = string(
         abi.encodePacked(
-            '<svg width="300" height="400" xmlns="http://www.w3.org/2000/svg">',
-            '<rect width="300" height="400" fill="white"/>',
-            '<text x="10" y="30" font-family="Arial" font-size="24" fill="purple">Mastermind</text>',
-            '<line x1="10" y1="50" x2="290" y2="50" stroke="black" stroke-width="2"/>',
-            
-            '<circle cx="50" cy="80" r="10" fill="red" />',
-            '<circle cx="80" cy="80" r="10" fill="blue" />',
-            '<circle cx="110" cy="80" r="10" fill="green" />',
-            '<circle cx="140" cy="80" r="10" fill="yellow" />',
-            
-            '<circle cx="50" cy="120" r="10" fill="white" stroke="black" stroke-width="2"/>',
-            '<circle cx="80" cy="120" r="10" fill="white" stroke="black" stroke-width="2"/>',
-            '<circle cx="110" cy="120" r="10" fill="white" stroke="black" stroke-width="2"/>',
-            '<circle cx="140" cy="120" r="10" fill="white" stroke="black" stroke-width="2"/>',
-            
-            '<circle cx="50" cy="160" r="10" fill="white" stroke="black" stroke-width="2"/>',
-            '<circle cx="80" cy="160" r="10" fill="white" stroke="black" stroke-width="2"/>',
-            '<circle cx="110" cy="160" r="10" fill="white" stroke="black" stroke-width="2"/>',
-            '<circle cx="140" cy="160" r="10" fill="white" stroke="black" stroke-width="2"/>',
-            
-            '<circle cx="50" cy="200" r="10" fill="white" stroke="black" stroke-width="2"/>',
-            '<circle cx="80" cy="200" r="10" fill="white" stroke="black" stroke-width="2"/>',
-            '<circle cx="110" cy="200" r="10" fill="white" stroke="black" stroke-width="2"/>',
-            '<circle cx="140" cy="200" r="10" fill="white" stroke="black" stroke-width="2"/>',
-        
-            
-            '<text x="10" y="350" font-family="Arial" font-size="16" fill="black">',
+            '<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">',
+            '<rect width="300" height="300" fill="#3c0a63" rx="40" ry="40" stroke="#ffd700" stroke-width="20"/>',
+            '<circle cx="150" cy="60" r="30" fill="#00cfff"/>',
+            '<circle cx="60" cy="150" r="30" fill="#00ff57"/>',
+            '<circle cx="150" cy="240" r="30" fill="#ff5c5c"/>',
+            '<circle cx="240" cy="150" r="30" fill="#b25cff"/>',
+            '<circle cx="60" cy="60" r="30" fill="#ff9b00"/>',
+            '<circle cx="240" cy="60" r="30" fill="#ff5cf2"/>',
+            '<circle cx="240" cy="240" r="30" fill="#ff9b00"/>',  
+            '<circle cx="60" cy="240" r="30" fill="#ffcf00"/>',  
+            '<text x="150" y="165" font-family="Arial" font-size="72" fill="#c568ff" text-anchor="middle" dominant-baseline="middle">m</text>',
+            '<text x="40" y="280" font-family="Roboto" font-size="16" fill="white">',
             'Game Result: ',
             gameResult,
             '</text>',
-            '<text x="10" y="380" font-family="Arial" font-size="16" fill="black">',
+            '<text x="40" y="295" font-family="Roboto" font-size="16" fill="white">',
             'Token ID: ',
             uintToString(tokenId),
             '</text>',
@@ -289,5 +260,34 @@ function generateSVGImage(string memory gameResult, uint256 tokenId) internal pu
         }
         string memory str = string(s);
         return str;
+    }
+
+    function getGuesses() public view returns (Guess[] memory) {
+        return guesses;
+    }
+
+    function getMakerScore() public view returns (uint) {
+        return scoreCodemaker;
+    }
+
+    function getBreakerScore() public view returns (uint) {
+        return scoreCodebreaker;
+    }
+
+    function _baseURI() internal pure override returns (string memory) {
+        return "data:application/json;base64,";
+    }
+
+    function getGuessesCodes() public view returns (uint8[][] memory) {
+        uint8[][] memory codes = new uint8[][](guesses.length);
+        for (uint i = 0; i < guesses.length; i++) {
+            codes[i] = guesses[i].code;
+        }
+        return codes;
+    }
+    function getLatestFeedback() public view returns (uint8 blackPegs, uint8 whitePegs) {
+        require(guesses.length > 0, "No guesses made yet");
+        Guess memory latestGuess = guesses[guesses.length - 1];
+        return (latestGuess.blackPegs, latestGuess.whitePegs);
     }
 }
