@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { _startGame } from "../store/wallet";
 const NUM_ROWS = 10;
 const CODE_LENGTH = 4;
 const COLORS = {
@@ -119,6 +119,44 @@ const Game = () => {
 
   const handleSecretCodeSubmit = () => {
     if (secretCode.every((color) => color !== null)) {
+      // Convert colors from hex codes to numbers
+      const convertedSecretCode = secretCode.map((color) => {
+        switch (color) {
+          case "#e11d48":
+            return 1;
+          case "#3b82f6":
+            return 2;
+          case "#22c55e":
+            return 3;
+          case "#f97316":
+            return 4;
+          case "#7c3aed":
+            return 5;
+          case "#92400e":
+            return 6;
+          case "#94a3b8":
+            return 7;
+          case "#d946ef":
+            return 8;
+          case "#fbbf24":
+            return 9;
+          default:
+            return 0;
+        }
+      });
+
+      console.log("Secret code submitted:", convertedSecretCode);
+      console.log("convertedSecretCode[0] ", Number(convertedSecretCode[0]));
+      console.log("convertedSecretCode[1] ", convertedSecretCode[1]);
+      console.log("convertedSecretCode[2] ", convertedSecretCode[2]);
+      console.log("convertedSecretCode[3] ", convertedSecretCode[3]);
+      _startGame({
+        code1: convertedSecretCode[0],
+        code2: convertedSecretCode[1],
+        code3: convertedSecretCode[2],
+        code4: convertedSecretCode[3],
+      });
+
       setIsSettingSecretCode(false);
     } else {
       alert("Please select a color for all pegs in the secret code.");

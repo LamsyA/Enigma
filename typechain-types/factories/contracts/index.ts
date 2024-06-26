@@ -2,4 +2,3 @@
 /* tslint:disable */
 /* eslint-disable */
 export { Mastermind__factory } from "./Mastermind__factory";
-export { MyToken__factory } from "./MyToken__factory";

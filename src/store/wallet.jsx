@@ -1,11 +1,11 @@
-import abi from "../artifacts/contracts/Mastermind.sol/Mastermind.json";
+import abi from "../abis/contracts/Mastermind.sol/Mastermind.json";
 
 import MASTERMID_CONTRACT_ADDRESS from "./deployedContractAddress.json";
 import { getGlobalState, setGlobalState } from "./Data";
 import { ethers } from "ethers";
 
-const { ethereum } = window;
-const contractAddress = MASTERMID_CONTRACT_ADDRESS;
+const contractAddress = MASTERMID_CONTRACT_ADDRESS.MASTERMID_CONTRACT_ADDRESS;
+console.log(contractAddress);
 const contractAbi = abi.abi;
 
 // const contractAddress = import.meta.env.VITE_INFURA_CONTRACT_ADDRESS;
@@ -35,9 +35,11 @@ const isWalletConnected = async () => {
 
     if (accounts.length) {
       setGlobalState("connectedAccount", accounts[0]?.toLowerCase());
+      return true;
     } else {
-      alert("Please connect wallet.");
+      //   alert("Please connect wallet.");
       console.log("No accounts found.");
+      return false;
     }
   } catch (error) {
     reportError(error);
@@ -47,7 +49,8 @@ const getContract = async () => {
   const connectedAccount = getGlobalState("connectedAccount");
 
   if (connectedAccount) {
-    const provider = new ethers.providers.Web3Provider(ethereum);
+    // const provider = new ethers.providers.Web3Provider(ethereum);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(contractAddress, contractAbi, signer);
     return contract;
@@ -56,26 +59,24 @@ const getContract = async () => {
   }
 };
 
-const registerUser = async ({
-  _age,
-  _nationalId,
-  _phonenumber,
-  _firstName,
-}) => {
+const _startGame = async ({ code1, code2, code3, code4 }) => {
+  console.log("testing code ", code1, code2, code3, code4);
   try {
     if (!ethereum) return alert("Please install Metamask");
-    // const connectedAccount = getGlobalState("connectedAccount");
+    const connectedAccount = getGlobalState("connectedAccount");
     const contract = await getContract();
-    const register = await contract._registerUser(
-      _age,
-      _nationalId,
-      _phonenumber,
-      _firstName
-    );
+    console.log("Code ", [code1, code2, code3, code4]);
+    const register = await contract.connectedAccount.startGame([
+      code1,
+      code2,
+      code3,
+      code4,
+    ]);
     console.log("Created Asset:", register);
     register.wait();
     return true;
   } catch (error) {
+    console.log(error);
     reportError(error);
   }
 };
@@ -341,7 +342,7 @@ export {
   getOwner,
   ProbeAsset,
   ReleaseAsset,
-  registerUser,
+  _startGame,
   verifyUser,
   getVerify,
 };

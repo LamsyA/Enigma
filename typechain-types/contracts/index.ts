@@ -2,4 +2,3 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { Mastermind } from "./Mastermind";
-export type { MyToken } from "./MyToken";

@@ -38,6 +38,10 @@ const config: HardhatUserConfig = {
       accounts: [PRIVATE_KEY],
       gasPrice: 200000000,
     },
+    localhost: {
+      url: "http://127.0.0.1:8545",
+      // chainId: 31337,
+    },
   },
 
   paths: {
@@ -47,4 +51,5 @@ const config: HardhatUserConfig = {
 // account factory: 0x9AEE3332FC634A982172F2010a3116abC4Ddd0e9
 // contract deployed to 0x9D22c2ac1428117AE5b797092A5995A4e9957072
 // Token deployed to 0x357421A38AD67C365913f3daBa6DD480EfBd0cf4
+
 export default config;

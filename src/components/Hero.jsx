@@ -3,8 +3,6 @@ import Navbar from "./Navbar";
 import logo from "../assets/logo.png";
 import { useNavigate, Link } from "react-router-dom";
 
-const images = [newcastle1, newcastle2, newcastle3];
-
 const Hero = () => {
   const navigate = useNavigate();
 
@@ -45,16 +43,8 @@ const Hero = () => {
             </div>
           </div>
         </main>
-        <footer className="w-full flex justify-center items-center text-white text-center py-10">
-          <div className="flex justify-center items-center gap-48 text-sm">
-            <div>Mastermind Game vector created by Engima</div>
-            <a
-              href="https://www.freepik.com/free-photos-vectors/abstract"
-              className="text-blue-500 hover:text-blue-700"
-            >
-              © {new Date().getFullYear()} Mastermind Game. All rights reserved.
-            </a>
-          </div>
+        <footer className="w-full flex justify-center items-center text-white text-center py-20">
+          © {new Date().getFullYear()} Mastermind Game. All rights reserved.
         </footer>
       </div>
     </div>
