@@ -2,12 +2,13 @@ import { createGlobalState } from "react-hooks-global-state";
 const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   modal: "scale-0",
   showNft: "scale-0",
-  updateModal: "scale-0",
+  active: "scale-0",
   loader: { show: false, msg: "" },
   alert: { show: false, msg: "", color: "" },
   contract: null,
   connectedAccount: "",
-  nft: null,
+  maker: null,
+  ismaker: false,
   nfts: [],
   transactions: [],
 });

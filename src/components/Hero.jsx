@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "./Navbar";
 import logo from "../assets/logo.png";
 import { useNavigate, Link } from "react-router-dom";
+import { setGlobalState } from "../store/Data";
 
 const Hero = () => {
   const navigate = useNavigate();
 
   const handleStartGame = () => {
+    setGlobalState("active", "scale-100");
+    console.log("clicked");
     navigate("/Game");
   };
 
@@ -32,14 +34,14 @@ const Hero = () => {
             ></div>
 
             <div className="absolute inset-0 flex items-center justify-center text-center mt-60 space-y-50 p-4">
-              <Link to="/Game">
-                <button
-                  // onClick={handleStartGame}
-                  className="bg-yellow-600 text-white px-6 py-3 mt-6 rounded shadow hover:bg-blue-700 transition duration-200 z-20"
-                >
-                  Start Game
-                </button>
-              </Link>
+              {/* <Link to="/Game"> */}
+              <button
+                onClick={handleStartGame}
+                className="bg-yellow-600 text-white px-6 py-3 mt-6 rounded shadow hover:bg-blue-700 transition duration-200 z-20"
+              >
+                Start Game
+              </button>
+              {/* </Link> */}
             </div>
           </div>
         </main>

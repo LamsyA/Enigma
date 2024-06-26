@@ -6,6 +6,8 @@ import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
 import "./Counters.sol";
 
 contract Mastermind is ERC721 {
+
+    error Mastermind__GameAlreadyStarted();
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenId;
@@ -53,7 +55,6 @@ contract Mastermind is ERC721 {
     }
 
     constructor() ERC721("MasterMind", "MSM") {
-        codemaker = msg.sender;
         gameActive = false;
     }
 
@@ -70,8 +71,12 @@ contract Mastermind is ERC721 {
     }
 
     function startGame(uint8[] memory _secretCode) public onlyCodemaker {
+        require(codemaker != address(0), "codemaker address must be set");
         require(codebreaker != address(0), "Codebreaker address must be set");
         require(_secretCode.length == CODE_LENGTH, "Secret code must be 4 digits long");
+        if(gameActive == true) {
+            revert Mastermind__GameAlreadyStarted();
+        }
         secretCode = _secretCode;
         secretCodeHash = keccak256(abi.encodePacked(_secretCode));
         guessCount = 0;

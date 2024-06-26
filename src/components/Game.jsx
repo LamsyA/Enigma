@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { _startGame } from "../store/wallet";
+import { _startGame, getCodemaker } from "../store/wallet";
 const NUM_ROWS = 10;
 const CODE_LENGTH = 4;
 const COLORS = {
@@ -34,6 +34,11 @@ const Game = () => {
   });
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
+
+  const isCodeMakerSet = async () => {
+    const codeMaker = await getCodemaker();
+    console.log("code maker: ", codeMaker);
+  };
 
   const handlePegClick = (rowIndex, pegIndex) => {
     if (rowIndex !== currentRow || gameOver) return;
@@ -146,7 +151,7 @@ const Game = () => {
       });
 
       console.log("Secret code submitted:", convertedSecretCode);
-      console.log("convertedSecretCode[0] ", Number(convertedSecretCode[0]));
+      console.log("convertedSecretCode[0] ", convertedSecretCode[0]);
       console.log("convertedSecretCode[1] ", convertedSecretCode[1]);
       console.log("convertedSecretCode[2] ", convertedSecretCode[2]);
       console.log("convertedSecretCode[3] ", convertedSecretCode[3]);
