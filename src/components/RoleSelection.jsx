@@ -24,10 +24,10 @@ const RoleSelection = ({ setRole }) => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center"
+      className="min-h-screen flex items-center justify-center "
       style={{ backgroundColor: "#0F1116" }}
     >
-      <div className="p-4 bg-amber-800 shadow-lg rounded text-center">
+      <div className="p-4 bg-amber-800 shadow-lg justify-between space-x-4 rounded-md text-center">
         <h1 className="text-white mb-4">Select Your Role</h1>
         <button
           onClick={() => handleRoleSelection("codeMaker")}

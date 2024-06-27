@@ -88,6 +88,95 @@ body {
   padding: 0.5rem 2rem; /* Adjust padding for desired size */
 }
 
+/* styles.css */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes color-change {
+  0%,
+  100% {
+    background-color: #e11d48;
+  }
+  16% {
+    background-color: #3b82f6;
+  }
+  32% {
+    background-color: #10b981;
+  }
+  48% {
+    background-color: #f59e0b;
+  }
+  64% {
+    background-color: #a855f7;
+  }
+  80% {
+    background-color: #ef4444;
+  }
+}
+
+.loader {
+  display: inline-block;
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.loader div {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #fff;
+  animation: spin 1.2s linear infinite, color-change 1.2s linear infinite;
+}
+
+.loader div:nth-child(1) {
+  top: 5%;
+  left: 50%;
+  animation-delay: 0s;
+}
+.loader div:nth-child(2) {
+  top: 25%;
+  left: 75%;
+  animation-delay: 0.2s;
+}
+.loader div:nth-child(3) {
+  top: 50%;
+  left: 95%;
+  animation-delay: 0.4s;
+}
+.loader div:nth-child(4) {
+  top: 75%;
+  left: 75%;
+  animation-delay: 0.6s;
+}
+.loader div:nth-child(5) {
+  top: 95%;
+  left: 50%;
+  animation-delay: 0.8s;
+}
+.loader div:nth-child(6) {
+  top: 75%;
+  left: 25%;
+  animation-delay: 1s;
+}
+.loader div:nth-child(7) {
+  top: 50%;
+  left: 5%;
+  animation-delay: 1.2s;
+}
+.loader div:nth-child(8) {
+  top: 25%;
+  left: 25%;
+  animation-delay: 1.4s;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

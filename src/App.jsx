@@ -3,6 +3,7 @@ import Game from "./components/Game";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import { Route, Routes } from "react-router-dom";
+import GamePlay from "./components/GamePlay";
 import { useEffect, useState } from "react";
 import {
   getCodemaker,
@@ -34,6 +35,7 @@ const App = () => {
       <Routes>
         <Route path="/" exact element={<Hero />} />
         <Route path="/Game" exact element={<Game />} />
+        <Route path="/GamePlay" exact element={<GamePlay />} />
       </Routes>
     </div>
   );
