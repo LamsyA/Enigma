@@ -1,18 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SecretCodeSetter from "./SecretCodeSetter";
 import GuessingTable from "./GuessingTable";
+import RoleSelection from "./RoleSelection";
 import { useGlobalState } from "../store/Data";
-import { COLORS, NUM_ROWS, CODE_LENGTH } from "../store/lib"; // Define these in a separate file
+import { checkActiveGame, getRole } from "../store/wallet"; // Assume these functions interact with the smart contract
+import { COLORS, CODE_LENGTH } from "../store/lib";
 
 const Game = () => {
-  const [activegame] = useGlobalState("activegame");
-  console.log("activegame.........", activegame);
-  const active = activegame;
-  console.log("active", active);
+  const [activegame, setActivegame] = useGlobalState("activegame");
+  const [role, setRole] = useState(null);
   const [secretCode, setSecretCode] = useState(Array(CODE_LENGTH).fill(null));
-  const [isSettingSecretCode, setIsSettingSecretCode] = useState(!active);
+  const [isSettingSecretCode, setIsSettingSecretCode] = useState(true);
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
+
+  useEffect(() => {
+    const checkGameStatus = async () => {
+      const gameActive = await checkActiveGame();
+      setActivegame(gameActive);
+
+      if (gameActive) {
+        const userRole = await getRole();
+        setRole(userRole);
+        setIsSettingSecretCode(userRole === "codeMaker" ? false : true);
+      }
+    };
+    checkGameStatus();
+  }, [setActivegame]);
+
+  if (!role && !activegame) {
+    return <RoleSelection setRole={setRole} />;
+  }
 
   return (
     <div
@@ -20,7 +38,7 @@ const Game = () => {
       style={{ backgroundColor: "#0F1116" }}
     >
       <div className="p-4 bg-amber-800 shadow-lg rounded">
-        {isSettingSecretCode ? (
+        {role === "codeMaker" && isSettingSecretCode ? (
           <SecretCodeSetter
             setSecretCode={setSecretCode}
             setIsSettingSecretCode={setIsSettingSecretCode}
@@ -43,6 +61,7 @@ const Game = () => {
               secretCode={secretCode}
               gameOver={gameOver}
               setGameOver={setGameOver}
+              gameWon={gameWon}
               setGameWon={setGameWon}
             />
           </>

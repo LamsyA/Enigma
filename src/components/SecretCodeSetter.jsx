@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { _startGame } from "../store/wallet";
 import { useGlobalState } from "../store/Data";
-import { COLORS, CODE_LENGTH } from "../store/lib"; // Define these in a separate file
+import { COLORS, CODE_LENGTH } from "../store/lib";
 
 const SecretCodeSetter = ({ setSecretCode, setIsSettingSecretCode }) => {
   const [activegame] = useGlobalState("activegame");
@@ -34,11 +34,14 @@ const SecretCodeSetter = ({ setSecretCode, setIsSettingSecretCode }) => {
       });
 
       setSecretCode(secretCode);
-      setIsSettingSecretCode(activegame);
+
+      setIsSettingSecretCode(false);
     } else {
       alert("Please select a color for all pegs in the secret code.");
     }
   };
+
+  if (activegame) return null;
 
   return (
     <div className="mb-4">

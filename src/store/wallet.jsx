@@ -126,6 +126,33 @@ const setCodeBreakerAddress = async () => {
   }
 };
 
+const setCodebreaker = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const connectedAccount = getGlobalState("connectedAccount");
+    const contract = await getContract();
+    console.log("connected account ", connectedAccount);
+    const codemaker = await contract.setCodebreaker();
+    console.log("code breaker address:", codemaker);
+  } catch (error) {
+    console.log(error);
+    reportError(error);
+  }
+};
+
+const setCodemaker = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const connectedAccount = getGlobalState("connectedAccount");
+    const contract = await getContract();
+    console.log("connected account ", connectedAccount);
+    const codemaker = await contract.setCodemaker();
+    console.log("code breaker address:", codemaker);
+  } catch (error) {
+    console.log(error);
+    reportError(error);
+  }
+};
 const getCodemaker = async () => {
   try {
     if (!ethereum) return alert("Please install Metamask");
@@ -157,6 +184,36 @@ const getGameActive = async () => {
   }
 };
 
+const checkActiveGame = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+    const active = await contract.gameActive();
+    console.log("activegame", active);
+    // setGlobalState("activegame", active);
+  } catch (error) {
+    reportError(error.message);
+  }
+};
+
+const getRole = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+    const codemaker = await contract.codemaker();
+    const codebreaker = await contract.codebreaker();
+    if (account.toLowerCase() === codemaker.toLowerCase()) {
+      return "codeMaker";
+    }
+    if (account.toLowerCase() === codebreaker.toLowerCase()) {
+      return "codeBreaker";
+    }
+    return null;
+  } catch (error) {
+    reportError(error.message);
+  }
+};
+
 const _getLatestFeedback = async () => {
   try {
     if (!ethereum) return alert("Please install Metamask");
@@ -166,6 +223,49 @@ const _getLatestFeedback = async () => {
       ? [feedback.blackPegs.toString(), feedback.whitePegs.toString()]
       : [0, 0];
     console.log("feedback: ", feedbacks);
+    return feedback;
+  } catch (error) {
+    reportError(error.message);
+  }
+};
+const _getAllGuessesAndFeedback = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+    const allGuesses = await contract.getGuessesCodes();
+    const feedback = await contract.getAllFeedback();
+
+    const allFeedback = feedback.map((fb) => [fb[0], fb[1]]);
+
+    console.log("all guesses and feedback: ", allGuesses, allFeedback);
+    return { allGuesses, allFeedback };
+  } catch (error) {
+    console.error("Error fetching guesses and feedback:", error);
+    return { allGuesses: [], allFeedback: [] };
+  }
+};
+
+const _getSecretCode = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+    const secretCode = await contract.getSecret();
+    console.log("secret code: ", secretCode);
+    return secretCode;
+  } catch (error) {
+    reportError(error.message);
+  }
+};
+
+const _getGuessesCodes = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+    const feedback = await contract.getAllGuesses();
+    const feedbacks = feedback
+      ? [feedback.blackPegs.toString(), feedback.whitePegs.toString()]
+      : [0, 0];
+    console.log("code guessess ...: ", feedbacks);
     return feedback;
     // if (feedback === 0) {
     //   return false;
@@ -206,4 +306,11 @@ export {
   getGuess,
   getGameActive,
   _getLatestFeedback,
+  _getGuessesCodes,
+  setCodebreaker,
+  setCodemaker,
+  checkActiveGame,
+  getRole,
+  _getAllGuessesAndFeedback,
+  _getSecretCode,
 };

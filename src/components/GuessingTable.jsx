@@ -1,6 +1,10 @@
-import React, { useState } from "react";
-import { _makeGuess, _getLatestFeedback } from "../store/wallet";
-import { COLORS, NUM_ROWS, CODE_LENGTH } from "../store/lib"; // Define these in a separate file
+import React, { useState, useEffect } from "react";
+import {
+  _makeGuess,
+  _getLatestFeedback,
+  _getAllGuessesAndFeedback,
+} from "../store/wallet";
+import { COLORS, NUM_ROWS, CODE_LENGTH } from "../store/lib";
 
 const GuessingTable = ({
   secretCode,
@@ -87,6 +91,48 @@ const GuessingTable = ({
     }
   };
 
+  const refreshBoard = async () => {
+    try {
+      const { allGuesses, allFeedback } = await _getAllGuessesAndFeedback();
+
+      // Logging to debug the structure of allGuesses and allFeedback
+      console.log("allGuesses:", allGuesses);
+      console.log("allFeedback:", allFeedback);
+
+      const newGuesses = Array.from({ length: NUM_ROWS }, (_, rowIndex) =>
+        rowIndex < allGuesses.length
+          ? allGuesses[rowIndex].map((colorKey) => COLORS[colorKey])
+          : Array(CODE_LENGTH).fill(null)
+      );
+      setGuesses(newGuesses);
+
+      const newFeedback = Array.from({ length: NUM_ROWS }, (_, rowIndex) =>
+        rowIndex < allFeedback.length
+          ? Array.from({ length: CODE_LENGTH }, (_, i) => {
+              if (i < allFeedback[rowIndex][0]) return "black";
+              if (i < allFeedback[rowIndex][0] + allFeedback[rowIndex][1])
+                return "white";
+              return null;
+            })
+          : Array(CODE_LENGTH).fill(null)
+      );
+      setFeedback(newFeedback);
+
+      // Set the current row to the next row after the last guess
+      setCurrentRow(allGuesses.length);
+
+      const secret = await _getSecretCode();
+      const secretColors = secret.map((key) => COLORS[key]);
+      setSecretCode(secretColors);
+    } catch (error) {
+      console.error("Error refreshing board:", error);
+    }
+  };
+
+  useEffect(() => {
+    refreshBoard();
+  }, []);
+
   return (
     <>
       {guesses.map((guess, rowIndex) => (
@@ -143,6 +189,12 @@ const GuessingTable = ({
         disabled={gameOver}
       >
         Check
+      </button>
+      <button
+        onClick={refreshBoard}
+        className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+      >
+        Refresh
       </button>
       {gameOver && (
         <div className="mt-4 text-center">

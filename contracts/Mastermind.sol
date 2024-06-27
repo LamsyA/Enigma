@@ -290,4 +290,21 @@ function generateSVGImage(string memory gameResult, uint256 tokenId) internal pu
         Guess memory latestGuess = guesses[guesses.length - 1];
         return (latestGuess.blackPegs, latestGuess.whitePegs);
     }
+
+    function getAllFeedback() public view returns (uint8[2][] memory) {
+        uint8[2][] memory allFeedback = new uint8[2][](guesses.length);
+        for (uint i = 0; i < guesses.length; i++) {
+            allFeedback[i] = [guesses[i].blackPegs, guesses[i].whitePegs];
+        }
+        return allFeedback;
+    }
+   
+    function getSecret() public view  returns( uint8[] memory _secret) {
+        if(gameStatus == GameStatus.Won) {
+         return secretCode;
+        } else if(gameStatus == GameStatus.Lost)  {
+         return secretCode;
+     } else return new uint8[](CODE_LENGTH);
+     }
+        
 }

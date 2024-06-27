@@ -51,12 +51,14 @@ export interface MastermindInterface extends utils.Interface {
     "codemaker()": FunctionFragment;
     "gameActive()": FunctionFragment;
     "gameStatus()": FunctionFragment;
+    "getAllFeedback()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getBreakerScore()": FunctionFragment;
     "getGuesses()": FunctionFragment;
     "getGuessesCodes()": FunctionFragment;
     "getLatestFeedback()": FunctionFragment;
     "getMakerScore()": FunctionFragment;
+    "getSecret()": FunctionFragment;
     "guessCount()": FunctionFragment;
     "guesses(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
@@ -85,12 +87,14 @@ export interface MastermindInterface extends utils.Interface {
       | "codemaker"
       | "gameActive"
       | "gameStatus"
+      | "getAllFeedback"
       | "getApproved"
       | "getBreakerScore"
       | "getGuesses"
       | "getGuessesCodes"
       | "getLatestFeedback"
       | "getMakerScore"
+      | "getSecret"
       | "guessCount"
       | "guesses"
       | "isApprovedForAll"
@@ -133,6 +137,10 @@ export interface MastermindInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getAllFeedback",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "getApproved",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -156,6 +164,7 @@ export interface MastermindInterface extends utils.Interface {
     functionFragment: "getMakerScore",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "getSecret", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "guessCount",
     values?: undefined
@@ -246,6 +255,10 @@ export interface MastermindInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "gameActive", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "gameStatus", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "getAllFeedback",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
@@ -266,6 +279,7 @@ export interface MastermindInterface extends utils.Interface {
     functionFragment: "getMakerScore",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getSecret", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "guessCount", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "guesses", data: BytesLike): Result;
   decodeFunctionResult(
@@ -505,6 +519,8 @@ export interface Mastermind extends BaseContract {
 
     gameStatus(overrides?: CallOverrides): Promise<[number]>;
 
+    getAllFeedback(overrides?: CallOverrides): Promise<[[number, number][]]>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -523,6 +539,10 @@ export interface Mastermind extends BaseContract {
     ): Promise<[number, number] & { blackPegs: number; whitePegs: number }>;
 
     getMakerScore(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getSecret(
+      overrides?: CallOverrides
+    ): Promise<[number[]] & { _secret: number[] }>;
 
     guessCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -632,6 +652,8 @@ export interface Mastermind extends BaseContract {
 
   gameStatus(overrides?: CallOverrides): Promise<number>;
 
+  getAllFeedback(overrides?: CallOverrides): Promise<[number, number][]>;
+
   getApproved(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -650,6 +672,8 @@ export interface Mastermind extends BaseContract {
   ): Promise<[number, number] & { blackPegs: number; whitePegs: number }>;
 
   getMakerScore(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getSecret(overrides?: CallOverrides): Promise<number[]>;
 
   guessCount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -759,6 +783,8 @@ export interface Mastermind extends BaseContract {
 
     gameStatus(overrides?: CallOverrides): Promise<number>;
 
+    getAllFeedback(overrides?: CallOverrides): Promise<[number, number][]>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -777,6 +803,8 @@ export interface Mastermind extends BaseContract {
     ): Promise<[number, number] & { blackPegs: number; whitePegs: number }>;
 
     getMakerScore(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getSecret(overrides?: CallOverrides): Promise<number[]>;
 
     guessCount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -991,6 +1019,8 @@ export interface Mastermind extends BaseContract {
 
     gameStatus(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getAllFeedback(overrides?: CallOverrides): Promise<BigNumber>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1005,6 +1035,8 @@ export interface Mastermind extends BaseContract {
     getLatestFeedback(overrides?: CallOverrides): Promise<BigNumber>;
 
     getMakerScore(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getSecret(overrides?: CallOverrides): Promise<BigNumber>;
 
     guessCount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1109,6 +1141,8 @@ export interface Mastermind extends BaseContract {
 
     gameStatus(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    getAllFeedback(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1123,6 +1157,8 @@ export interface Mastermind extends BaseContract {
     getLatestFeedback(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getMakerScore(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getSecret(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     guessCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
