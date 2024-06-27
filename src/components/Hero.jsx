@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
 import { useNavigate, Link } from "react-router-dom";
-import { setGlobalState } from "../store/Data";
+import { setGlobalState, useGlobalState } from "../store/Data";
+import { isWalletConnected } from "../store/wallet";
 
 const Hero = () => {
   const navigate = useNavigate();
 
   const handleStartGame = () => {
-    setGlobalState("active", "scale-100");
-    console.log("clicked");
     navigate("/Game");
   };
+  const [connectedAccount] = useGlobalState("connectedAccount");
+  let isconnected;
+  console.log("connected account ", connectedAccount);
+  if (connectedAccount === "undefined") {
+    isconnected = false;
+  } else isconnected = true;
 
+  console.log("isconnected ", isconnected);
   return (
     <div className="w-full h-screen bg-[#0F1116] flex flex-col">
       {/* <Navbar /> */}

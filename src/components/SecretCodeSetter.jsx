@@ -35,7 +35,7 @@ const SecretCodeSetter = ({ setSecretCode, setIsSettingSecretCode }) => {
 
       setSecretCode(secretCode);
 
-      setIsSettingSecretCode(false);
+      setIsSettingSecretCode(activegame);
     } else {
       alert("Please select a color for all pegs in the secret code.");
     }

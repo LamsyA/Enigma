@@ -3,7 +3,7 @@ import SecretCodeSetter from "./SecretCodeSetter";
 import GuessingTable from "./GuessingTable";
 import RoleSelection from "./RoleSelection";
 import { useGlobalState } from "../store/Data";
-import { checkActiveGame, getRole } from "../store/wallet"; // Assume these functions interact with the smart contract
+import { checkActiveGame, getRole, _getSecretCode } from "../store/wallet"; // Import the _getSecretCode function
 import { COLORS, CODE_LENGTH } from "../store/lib";
 
 const Game = () => {
@@ -23,6 +23,14 @@ const Game = () => {
         const userRole = await getRole();
         setRole(userRole);
         setIsSettingSecretCode(userRole === "codeMaker" ? false : true);
+
+        if (userRole !== "codeMaker") {
+          const secretCodeFromContract = await _getSecretCode();
+          const convertedSecretCode = secretCodeFromContract.map(
+            (colorKey) => COLORS[colorKey]
+          );
+          setSecretCode(convertedSecretCode);
+        }
       }
     };
     checkGameStatus();
@@ -59,6 +67,7 @@ const Game = () => {
             </div>
             <GuessingTable
               secretCode={secretCode}
+              setSecretCode={setSecretCode}
               gameOver={gameOver}
               setGameOver={setGameOver}
               gameWon={gameWon}

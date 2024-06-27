@@ -3,11 +3,13 @@ import {
   _makeGuess,
   _getLatestFeedback,
   _getAllGuessesAndFeedback,
+  _getSecretCode,
 } from "../store/wallet";
 import { COLORS, NUM_ROWS, CODE_LENGTH } from "../store/lib";
 
 const GuessingTable = ({
   secretCode,
+  setSecretCode,
   gameOver,
   setGameOver,
   gameWon,
@@ -94,6 +96,12 @@ const GuessingTable = ({
   const refreshBoard = async () => {
     try {
       const { allGuesses, allFeedback } = await _getAllGuessesAndFeedback();
+      const secretCodeFromContract = await _getSecretCode();
+
+      // Convert the secret code from numeric values to color strings
+      const convertedSecretCode = secretCodeFromContract.map(
+        (colorKey) => COLORS[colorKey]
+      );
 
       // Logging to debug the structure of allGuesses and allFeedback
       console.log("allGuesses:", allGuesses);
@@ -120,12 +128,10 @@ const GuessingTable = ({
 
       // Set the current row to the next row after the last guess
       setCurrentRow(allGuesses.length);
-
-      const secret = await _getSecretCode();
-      const secretColors = secret.map((key) => COLORS[key]);
-      setSecretCode(secretColors);
+      console.log("convertedSecretCode:", convertedSecretCode);
+      setSecretCode(convertedSecretCode);
     } catch (error) {
-      console.error("Error refreshing board:", error);
+      console.error("Error refreshing board:", error.message);
     }
   };
 
