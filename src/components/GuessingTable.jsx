@@ -94,6 +94,9 @@ const GuessingTable = ({
       fetchLatestFeedback();
       await getcodebreakerscore();
       await getcodemakerscore();
+      await getCodebreaker();
+      await getCodemaker();
+      await refreshBoard();
     } else {
       console.log("Failed to submit guess");
     }
@@ -138,6 +141,9 @@ const GuessingTable = ({
       setSecretCode(convertedSecretCode);
       await getcodebreakerscore();
       await getcodemakerscore();
+
+      await getCodemaker();
+      await getCodebreaker();
     } catch (error) {
       console.error("Error refreshing board:", error.message);
     }
