@@ -5,6 +5,7 @@ import SoundControl from "./SoundControl";
 import InfoBox from "./InfoBox";
 import { checkActiveGame } from "../store/wallet";
 import { useGlobalState } from "../store/Data";
+import { TbLivePhoto, TbLivePhotoOff } from "react-icons/tb";
 import { HiOutlineStatusOffline, HiOutlineStatusOnline } from "react-icons/hi";
 const GamePlay = () => {
   const [maker] = useGlobalState("maker");
@@ -26,15 +27,15 @@ const GamePlay = () => {
     loadData();
   }, []);
   const gameStatus = activegame ? (
-    <div>
-      <HiOutlineStatusOnline
-        size={32}
-        className="text-green-600 animate-pulse "
-      />
+    <div className="flex  items-center">
+      <TbLivePhoto size={24} className="text-green-500 animate-pulse " />
+
+      <p className="text-xs font-medium italic ">Live</p>
     </div>
   ) : (
-    <div>
-      <HiOutlineStatusOffline size={32} className="text-red-500" />
+    <div className="flex  items-center">
+      <TbLivePhotoOff size={24} className="text-red-500" />
+      <p className="text-sm font-medium">Offline</p>
     </div>
   );
 
@@ -56,7 +57,7 @@ const GamePlay = () => {
         />
       </div>
 
-      <div className="fixed top-[10%] left-[60%] items-center flex">
+      <div className="fixed top-[10%] left-[60%] items-center flex mr-4">
         {gameStatus}
       </div>
       <SoundControl />

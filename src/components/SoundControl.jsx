@@ -50,9 +50,15 @@ const SoundControl = () => {
     <div className="fixed top-[9.5%] left-[65%] items-center flex">
       <button onClick={handlePlayPause}>
         {!isPlaying ? (
-          <GiSoundOff size={40} className="text-red-500" />
+          <div className="flex ml-4  items-center">
+            <GiSoundOff size={32} className="text-red-500" />
+            <p className="text-xs font-medium italic ">Sound Off</p>
+          </div>
         ) : (
-          <GiSoundOn size={40} className="text-green-500" />
+          <div className="flex  ml-4 items-center">
+            <GiSoundOn size={32} className="text-green-500" />
+            <p className="text-xs font-medium italic ">Sound On</p>
+          </div>
         )}
       </button>
     </div>

@@ -2,10 +2,10 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import { vars } from "hardhat/config";
 
-const INFURA_API_KEY = vars.get("INFURA_API_KEY");
+const ALCHEMY_API_KEY = vars.get("ALCHEMY_API_KEY");
 const PRIVATE_KEY = vars.get("PRIVATE_KEY");
 
-const LINEASCAN_API_KEY = vars.get("LINEASCAN_API_KEY");
+const BASE_API_KEY = vars.get("BASE_API_KEY");
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -19,25 +19,25 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      linea: LINEASCAN_API_KEY,
+      base: BASE_API_KEY,
     },
     customChains: [
       {
-        network: "linea",
-        chainId: 59141,
+        network: "base",
+        chainId: 84532,
         urls: {
-          apiURL: "https://api-sepolia.lineascan.build/api",
-          browserURL: "https://sepolia.lineascan.build/address",
+          apiURL: "https://api-sepolia.basescan.org/api",
+          browserURL: "'https://sepolia.base.org',",
         },
       },
     ],
   },
   networks: {
-    linea: {
-      url: INFURA_API_KEY,
+    base: {
+      url: `https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
       accounts: [PRIVATE_KEY],
-      gasPrice: 200000000,
     },
+
     localhost: {
       url: "http://127.0.0.1:8545",
       // chainId: 31337,
@@ -48,8 +48,5 @@ const config: HardhatUserConfig = {
     artifacts: "./src/abis",
   },
 };
-// account factory: 0x9AEE3332FC634A982172F2010a3116abC4Ddd0e9
-// contract deployed to 0x9D22c2ac1428117AE5b797092A5995A4e9957072
-// Token deployed to 0x357421A38AD67C365913f3daBa6DD480EfBd0cf4
 
 export default config;

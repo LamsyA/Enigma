@@ -213,8 +213,8 @@ const GuessingTable = ({
       {gameOver && (
         <div className="mt-4 text-center">
           {gameWon ? (
-            <div className="text-green-300 text-pretty font-bold italic text-xl">
-              🥳 You won! Congratulations!
+            <div className="text-green-300 text-pretty font-bold  text-xl">
+              🎖️ You won! Congratulations! NFT Minted
             </div>
           ) : (
             <div className="text-red-500 text-pretty font-bold text-xl">
