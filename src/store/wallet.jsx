@@ -49,7 +49,7 @@ const getContract = async () => {
   const connectedAccount = getGlobalState("connectedAccount");
 
   if (connectedAccount) {
-    const provider = new ethers.providers.Web3Provider(ethereum);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     // const provider = new ethers.JsonRpcProvider("");
     const signer = provider.getSigner();
     const contract = new ethers.Contract(contractAddress, contractAbi, signer);
