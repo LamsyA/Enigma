@@ -114,9 +114,10 @@ const setCodeBreakerAddress = async () => {
     const connectedAccount = getGlobalState("connectedAccount");
     const contract = await getContract();
     console.log("connected account ", connectedAccount);
-    const codemaker = await contract.setCodebreaker();
-    console.log("code breaker address:", codemaker);
-    await codemaker.wait().then((res) => {
+    const breaker = await contract.setCodebreaker();
+
+    console.log("code breaker address:", breaker);
+    await breaker.wait().then((res) => {
       console.log("result :", res);
     });
     return true;
@@ -167,6 +168,17 @@ const getCodemaker = async () => {
       setGlobalState("ismaker", true);
       return true;
     }
+  } catch (error) {
+    reportError(error.message);
+  }
+};
+const getCodebreaker = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+    const breaker = await contract.codebreaker();
+    setGlobalState("breaker", breaker);
+    console.log("breaker", breaker);
   } catch (error) {
     reportError(error.message);
   }
@@ -313,4 +325,5 @@ export {
   getRole,
   _getAllGuessesAndFeedback,
   _getSecretCode,
+  getCodebreaker,
 };

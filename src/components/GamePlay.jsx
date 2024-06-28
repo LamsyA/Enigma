@@ -1,45 +1,52 @@
 import React from "react";
 import Game from "./Game";
+import Leaderboard from "./Leaderboard";
+import SoundControl from "./SoundControl";
+import InfoBox from "./InfoBox";
+import { useGlobalState } from "../store/Data";
+import { HiOutlineStatusOffline, HiOutlineStatusOnline } from "react-icons/hi";
+const GamePlay = () => {
+  const [maker] = useGlobalState("maker");
+  const [breaker] = useGlobalState("breaker");
+  const [activegame] = useGlobalState("activegame");
 
-const leaderboardData = [
-  { position: 1, name: "Player1", score: 20000 },
-  { position: 2, name: "Player2", score: 15000 },
-  { position: 3, name: "Player3", score: 14590 },
-  { position: 4, name: "Player4", score: 14000 },
-  { position: 5, name: "Player5", score: 12000 },
-];
-
-const Leaderboard = () => {
-  return (
-    <div className="w-full max-w-md mx-auto border border-white bg-[#0F1116] rounded-lg shadow-lg mt-8">
-      <h2 className="text-center text-2xl font-bold text-yellow-600 p-4 border-b border-gray-300">
-        Leaderboard
-      </h2>
-      <ul>
-        {leaderboardData.map((player) => (
-          <li
-            key={player.position}
-            className="flex justify-between p-4 text-white border-b border-gray-200"
-          >
-            <span>
-              {player.position}. {player.name}
-            </span>
-            <span>{player.score}</span>
-          </li>
-        ))}
-      </ul>
+  const codeMakerScore = 50;
+  const codeBreakerScore = 40;
+  const gameStatus = activegame ? (
+    <div>
+      <HiOutlineStatusOnline
+        size={32}
+        className="text-green-600 animate-pulse "
+      />
+    </div>
+  ) : (
+    <div>
+      <HiOutlineStatusOffline size={32} className="text-red-500" />
     </div>
   );
-};
 
-const GamePlay = () => {
   return (
-    <div className="w-screen h-screen text-white flex items-center">
+    <div className="w-screen h-screen text-white flex items-center relative">
       <div className="p-28"></div>
       <div className="py-4 ">
         <Game />
       </div>
       <Leaderboard />
+      <div className="fixed top-20 right-10">
+        <InfoBox title="Code Maker" address={maker} score={codeMakerScore} />
+      </div>
+      <div className="fixed top-20 left-10">
+        <InfoBox
+          title="Code Breaker"
+          address={breaker}
+          score={codeBreakerScore}
+        />
+      </div>
+
+      <div className="fixed top-[10%] left-[60%] items-center flex">
+        {gameStatus}
+      </div>
+      <SoundControl />
     </div>
   );
 };

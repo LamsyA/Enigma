@@ -5,7 +5,7 @@ import {
   setCodemaker,
   checkActiveGame,
   getRole,
-} from "../store/wallet"; // Assume these functions interact with the smart contract
+} from "../store/wallet";
 
 const RoleSelection = ({ setRole }) => {
   const [, setActivegame] = useGlobalState("activegame");

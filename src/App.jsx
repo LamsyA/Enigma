@@ -11,8 +11,9 @@ import {
   getContract,
   isWalletConnected,
   _getLatestFeedback,
+  getCodebreaker,
 } from "./store/wallet";
-import Player from "./components/Player";
+
 const App = () => {
   const [loaded, setLoaded] = useState(false);
 
@@ -24,6 +25,8 @@ const App = () => {
       await getContract();
       await getGameActive();
       await getCodemaker();
+      const b = await getCodebreaker();
+      console.log("codebreaker", b);
       await _getLatestFeedback();
     };
     loadData();
@@ -31,7 +34,6 @@ const App = () => {
   return (
     <div className="bg-[#0F1116]">
       <Navbar />
-      <Player />
       <Routes>
         <Route path="/" exact element={<Hero />} />
         <Route path="/Game" exact element={<Game />} />

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../store/Data";
 import Modal from "./Modal";
-import "./styles.css"; // Make sure to import the CSS file
+import "./styles.css";
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Hero = () => {
         setShowModal(false);
         setIsLoading(false);
         navigate("/GamePlay");
-      }, 2000);
+      }, 1500);
     }
   };
 

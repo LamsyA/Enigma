@@ -8,6 +8,7 @@ const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   contract: null,
   connectedAccount: "",
   maker: null,
+  breaker: null,
   ismaker: false,
   activegame: false,
   guesses: [],

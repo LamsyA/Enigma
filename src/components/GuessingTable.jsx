@@ -198,17 +198,19 @@ const GuessingTable = ({
       </button>
       <button
         onClick={refreshBoard}
-        className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+        className="ml-2 mt-4 px-4 py-2 justify-center items-center bg-yellow-600 text-white rounded hover:bg-yellow-800"
       >
         Refresh
       </button>
       {gameOver && (
         <div className="mt-4 text-center">
           {gameWon ? (
-            <div className="text-green-500">You won! Congratulations!</div>
+            <div className="text-green-300 text-pretty font-bold italic text-xl">
+              🥳 You won! Congratulations!
+            </div>
           ) : (
-            <div className="text-red-500">
-              Game over! The secret code was displayed above.
+            <div className="text-red-500 text-pretty font-bold text-xl">
+              🚦 Game over! The secret code was displayed above.
             </div>
           )}
         </div>
