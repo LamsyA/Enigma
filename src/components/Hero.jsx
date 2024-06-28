@@ -33,7 +33,6 @@ const Hero = () => {
       );
       setShowModal(true);
 
-      // Simulate a delay for loading
       setTimeout(() => {
         setShowModal(false);
         setIsLoading(false);

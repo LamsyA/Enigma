@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Game from "./Game";
 import Leaderboard from "./Leaderboard";
 import SoundControl from "./SoundControl";
 import InfoBox from "./InfoBox";
+import { checkActiveGame } from "../store/wallet";
 import { useGlobalState } from "../store/Data";
 import { HiOutlineStatusOffline, HiOutlineStatusOnline } from "react-icons/hi";
 const GamePlay = () => {
@@ -14,6 +15,16 @@ const GamePlay = () => {
 
   const codeMakerScore = makerscore;
   const codeBreakerScore = breakerscore;
+
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const loadData = async () => {
+      console.log("Board Loaded");
+      setLoaded(true);
+      await checkActiveGame();
+    };
+    loadData();
+  }, []);
   const gameStatus = activegame ? (
     <div>
       <HiOutlineStatusOnline
