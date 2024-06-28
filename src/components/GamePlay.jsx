@@ -9,9 +9,11 @@ const GamePlay = () => {
   const [maker] = useGlobalState("maker");
   const [breaker] = useGlobalState("breaker");
   const [activegame] = useGlobalState("activegame");
+  const [makerscore] = useGlobalState("makerscore");
+  const [breakerscore] = useGlobalState("breakerscore");
 
-  const codeMakerScore = 50;
-  const codeBreakerScore = 40;
+  const codeMakerScore = makerscore;
+  const codeBreakerScore = breakerscore;
   const gameStatus = activegame ? (
     <div>
       <HiOutlineStatusOnline
@@ -32,10 +34,10 @@ const GamePlay = () => {
         <Game />
       </div>
       <Leaderboard />
-      <div className="fixed top-20 right-10">
+      <div className="fixed top-24 left-10">
         <InfoBox title="Code Maker" address={maker} score={codeMakerScore} />
       </div>
-      <div className="fixed top-20 left-10">
+      <div className="fixed top-24 right-10">
         <InfoBox
           title="Code Breaker"
           address={breaker}

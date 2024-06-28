@@ -41,20 +41,18 @@
 }
 
 .groove-outline {
-  border: 2px solid red; /* Red outline for the groove */
-  background-color: green; /* Background color for the groove */
+  border: 2px solid red;
+  background-color: green;
 }
 
-/* In your CSS file */
 .groove-outline {
   border: 2px solid red;
-  border-top: none; /* No top border to emphasize the groove effect */
-  background-color: #00ff00; /* Adjust as needed */
-  border-radius: 0 0 1rem 1rem; /* Rounded bottom corners */
-  padding: 0.5rem 2rem; /* Adjust padding for desired size */
+  border-top: none;
+  background-color: #00ff00;
+  border-radius: 0 0 1rem 1rem;
+  padding: 0.5rem 2rem;
 }
 
-/* styles.css */
 @keyframes spin {
   0% {
     transform: rotate(0deg);

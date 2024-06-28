@@ -7,7 +7,7 @@ const InfoBox = ({ title, address, score }) => {
     : "Not set";
 
   return (
-    <div className="bg-gray-700 text-white p-1 rounded-lg shadow-lg border border-amber-200 w-36 text-sm">
+    <div className=" bg-gray-700 text-white p-1 rounded-lg shadow-lg border border-amber-200 w-38 text-sm">
       <h3 className="font-bold mb-1">{title}</h3>
       <p className="truncate">Address: {shortenedAddress}</p>
       <p>Score: {score}</p>

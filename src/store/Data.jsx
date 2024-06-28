@@ -11,6 +11,8 @@ const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   breaker: null,
   ismaker: false,
   activegame: false,
+  makerscore: 0,
+  breakerscore: 0,
   guesses: [],
 });
 const setAlert = (msg, color = "green") => {

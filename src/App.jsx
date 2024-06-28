@@ -7,11 +7,13 @@ import GamePlay from "./components/GamePlay";
 import { useEffect, useState } from "react";
 import {
   getCodemaker,
-  getGameActive,
+  checkActiveGame,
   getContract,
   isWalletConnected,
   _getLatestFeedback,
   getCodebreaker,
+  getcodebreakerscore,
+  getcodemakerscore,
 } from "./store/wallet";
 
 const App = () => {
@@ -23,10 +25,11 @@ const App = () => {
       setLoaded(true);
       const result = await isWalletConnected();
       await getContract();
-      await getGameActive();
+      await checkActiveGame();
       await getCodemaker();
-      const b = await getCodebreaker();
-      console.log("codebreaker", b);
+      await getcodemakerscore();
+      await getcodebreakerscore();
+      await getCodebreaker();
       await _getLatestFeedback();
     };
     loadData();

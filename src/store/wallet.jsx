@@ -184,7 +184,7 @@ const getCodebreaker = async () => {
   }
 };
 
-const getGameActive = async () => {
+const checkActiveGame = async () => {
   try {
     if (!ethereum) return alert("Please install Metamask");
     const contract = await getContract();
@@ -196,13 +196,25 @@ const getGameActive = async () => {
   }
 };
 
-const checkActiveGame = async () => {
+const getcodemakerscore = async () => {
   try {
     if (!ethereum) return alert("Please install Metamask");
     const contract = await getContract();
-    const active = await contract.gameActive();
-    console.log("activegame", active);
-    // setGlobalState("activegame", active);
+    const makerscore = await contract.getMakerScore();
+    console.log("makerscore", Number(makerscore));
+    setGlobalState("makerscore", Number(makerscore));
+  } catch (error) {
+    reportError(error.message);
+  }
+};
+
+const getcodebreakerscore = async () => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+    const breakerscore = await contract.getBreakerScore();
+    console.log("breakerscore", Number(breakerscore));
+    setGlobalState("breakerscore", Number(breakerscore));
   } catch (error) {
     reportError(error.message);
   }
@@ -316,14 +328,15 @@ export {
   setCodeMakerAddress,
   setCodeBreakerAddress,
   getGuess,
-  getGameActive,
+  checkActiveGame,
   _getLatestFeedback,
   _getGuessesCodes,
   setCodebreaker,
   setCodemaker,
-  checkActiveGame,
   getRole,
   _getAllGuessesAndFeedback,
   _getSecretCode,
   getCodebreaker,
+  getcodebreakerscore,
+  getcodemakerscore,
 };

@@ -34,7 +34,7 @@ const Navbar = () => {
             </button>
           </div>
         )}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 opacity-90 bg-[#0F1116] text-white px-28 py-4 rounded-b-full groove-outline">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 opacity-90 bg-[#140f16] text-white px-28 py-4 rounded-b-full groove-outline">
           <div className="flex items-center space-x-2">
             {/* <img className=" w-6 cursor-pointer" src={nftLogo} alt="Logo" /> */}
             {/* <p className="text-xs font-bold text-gray-300 uppercase">

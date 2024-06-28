@@ -38,8 +38,8 @@
       ]
     },
     "/Users/mac/Documents/Lamsy/projects/hackathon/Enigma/contracts/Mastermind.sol": {
-      "lastModificationDate": 1719538072288,
-      "contentHash": "d744067e1460685b0f758cd1387bfc94",
+      "lastModificationDate": 1719543690259,
+      "contentHash": "5a67404d9a0f901ac856448eefd4730d",
       "sourceName": "contracts/Mastermind.sol",
       "solcConfig": {
         "version": "0.8.24",

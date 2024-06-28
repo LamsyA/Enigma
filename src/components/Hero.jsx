@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../store/Data";
 import Modal from "./Modal";
 import "./styles.css";
+import { connectWallet } from "../store/wallet";
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const Hero = () => {
     if (!connectedAccount) {
       setModalContent("Wallet is not connected. Please connect your wallet.");
       setShowModal(true);
-      // Trigger wallet connect logic here
+      await connectWallet();
     } else {
       setIsLoading(true);
       setModalContent(

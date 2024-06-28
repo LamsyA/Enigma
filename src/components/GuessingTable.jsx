@@ -4,6 +4,10 @@ import {
   _getLatestFeedback,
   _getAllGuessesAndFeedback,
   _getSecretCode,
+  getcodebreakerscore,
+  getcodemakerscore,
+  getCodebreaker,
+  getCodemaker,
 } from "../store/wallet";
 import { COLORS, NUM_ROWS, CODE_LENGTH } from "../store/lib";
 
@@ -88,6 +92,8 @@ const GuessingTable = ({
 
     if (result) {
       fetchLatestFeedback();
+      await getcodebreakerscore();
+      await getcodemakerscore();
     } else {
       console.log("Failed to submit guess");
     }
@@ -130,6 +136,8 @@ const GuessingTable = ({
       setCurrentRow(allGuesses.length);
       console.log("convertedSecretCode:", convertedSecretCode);
       setSecretCode(convertedSecretCode);
+      await getcodebreakerscore();
+      await getcodemakerscore();
     } catch (error) {
       console.error("Error refreshing board:", error.message);
     }
