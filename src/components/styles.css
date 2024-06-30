@@ -2,6 +2,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -28,42 +29,49 @@
   background: #1e90ff;
   transform: translate(-50%, 0);
 }
+
 .loader div:nth-child(2) {
   top: 14%;
   left: 79%;
   background: #32cd32;
   transform: translate(-50%, -50%);
 }
+
 .loader div:nth-child(3) {
   top: 50%;
   left: 100%;
   background: #ff4500;
   transform: translate(-50%, -50%);
 }
+
 .loader div:nth-child(4) {
   top: 86%;
   left: 79%;
   background: #ffd700;
   transform: translate(-50%, -50%);
 }
+
 .loader div:nth-child(5) {
   top: 100%;
   left: 50%;
   background: #ff69b4;
   transform: translate(-50%, -50%);
 }
+
 .loader div:nth-child(6) {
   top: 86%;
   left: 21%;
   background: #ba55d3;
   transform: translate(-50%, -50%);
 }
+
 .loader div:nth-child(7) {
   top: 50%;
   left: 0%;
   background: #00fa9a;
   transform: translate(-50%, -50%);
 }
+
 .loader div:nth-child(8) {
   top: 14%;
   left: 21%;

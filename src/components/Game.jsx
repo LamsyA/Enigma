@@ -3,10 +3,13 @@ import SecretCodeSetter from "./SecretCodeSetter";
 import GuessingTable from "./GuessingTable";
 import RoleSelection from "./RoleSelection";
 import { useGlobalState } from "../store/Data";
-import { checkActiveGame, getRole, _getSecretCode } from "../store/wallet"; // Import the _getSecretCode function
+// import { checkActiveGame, getRole, _getSecretCode } from "../store/wallet"; // Import the _getSecretCode function
+import { useContractContext } from "../store/wallet";
 import { COLORS, CODE_LENGTH } from "../store/lib";
 
 const Game = () => {
+  const { checkActiveGame, getRole, _getSecretCode } = useContractContext();
+
   const [activegame, setActivegame] = useGlobalState("activegame");
   const [role, setRole] = useState(null);
   const [secretCode, setSecretCode] = useState(Array(CODE_LENGTH).fill(null));

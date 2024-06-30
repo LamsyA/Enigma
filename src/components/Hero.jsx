@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGlobalState } from "../store/Data";
+// import { useGlobalState } from "../store/Data";
 import Modal from "./Modal";
 import "./styles.css";
-import { connectWallet } from "../store/wallet";
+import { useActiveAccount } from "thirdweb/react";
+// import { connectWallet } from "../store/wallet";
 
 const Hero = () => {
   const navigate = useNavigate();
-  const [connectedAccount] = useGlobalState("connectedAccount");
+  const account = useActiveAccount();
+//   const [connectedAccount] = useGlobalState("connectedAccount");
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleStartGame = async () => {
-    if (!connectedAccount) {
+    if (!account) {
       setModalContent("Wallet is not connected. Please connect your wallet.");
       setShowModal(true);
-      await connectWallet();
+    //   await connectWallet();
     } else {
       setIsLoading(true);
       setModalContent(
@@ -42,11 +44,11 @@ const Hero = () => {
   };
 
   useEffect(() => {
-    if (connectedAccount) {
+    if (account) {
       setShowModal(false);
       setIsLoading(false);
     }
-  }, [connectedAccount]);
+  }, [account]);
 
   return (
     <div className="w-full h-screen bg-[#0F1116] flex flex-col">

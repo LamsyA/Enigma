@@ -1,342 +1,335 @@
-import abi from "../abis/contracts/Mastermind.sol/Mastermind.json";
-
-import MASTERMID_CONTRACT_ADDRESS from "./deployedContractAddress.json";
+import React, { createContext, useContext } from "react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
+import { CONTRACT } from "../utils/const";
+import { prepareContractCall, sendTransaction } from "thirdweb";
 import { getGlobalState, setGlobalState } from "./Data";
-import { ethers } from "ethers";
+// import toast from "react-toastify";
 
-const contractAddress = MASTERMID_CONTRACT_ADDRESS.MASTERMID_CONTRACT_ADDRESS;
-console.log(contractAddress);
-const contractAbi = abi.abi;
+const ContractContext = createContext({
+    activeAccount: null,
+    _startGame: () => {},
+    _makeGuess: () => {},
+    _setCodeMakerAddress: () => {},
+    _setCodeBreakerAddress: () => {},
+    getCodemaker: () => {},
+    getCodebreaker: () => {},
+    checkActiveGame: () => {},
+    getcodemakerscore: () => {},
+    getcodebreakerscore: () => {},
+    getRole: () => {},
+    _getLatestFeedback: () => {},
+    _getAllGuessesAndFeedback: () => {},
+    _getSecretCode: () => {},
+    _getGuessesCodes: () => {},
+    getGuess: () => {}
+});
 
-// const contractAddress = import.meta.env.VITE_INFURA_CONTRACT_ADDRESS;
-const connectWallet = async () => {
-  try {
-    if (!ethereum) return alert("Wallet not found");
-    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-    setGlobalState("connectedAccount", accounts[0]?.toLowerCase());
-  } catch (error) {
-    reportError(error);
-  }
-};
-const isWalletConnected = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const accounts = await ethereum.request({ method: "eth_accounts" });
-    setGlobalState("connectedAccount", accounts[0]?.toLowerCase());
+const ContractProvider = ({ children }) => {
 
-    window.ethereum.on("chainChanged", (chainId) => {
-      window.location.reload();
+    const activeAccount = useActiveAccount();
+
+    const codemakerData = useReadContract({
+        contract: CONTRACT,
+        method: "codemaker",
+    });
+    const codebreakerData = useReadContract({
+        contract: CONTRACT,
+        method: "codebreaker",
+    });
+    const gameActiveData = useReadContract({
+        contract: CONTRACT,
+        method: "gameActive",
+    });
+    const makerScoreData = useReadContract({
+        contract: CONTRACT,
+        method: "getMakerScore",
+    });
+    const breakerScoreData = useReadContract({
+        contract: CONTRACT,
+        method: "getBreakerScore",
+    });
+    const latestFeedbackData = useReadContract({
+        contract: CONTRACT,
+        method: "getLatestFeedback",
+    });
+    const allGuessesData = useReadContract({
+        contract: CONTRACT,
+        method: "getGuessesCodes",
+    });
+    const allFeedbackData = useReadContract({
+        contract: CONTRACT,
+        method: "getAllFeedback",
+    });
+    const secretCodeData = useReadContract({
+        contract: CONTRACT,
+        method: "getSecret",
+    });
+    const guessesData = useReadContract({
+        contract: CONTRACT,
+        method: "getGuessesCodes",
     });
 
-    window.ethereum.on("accountsChanged", async () => {
-      setGlobalState("connectedAccount", accounts[0]?.toLowerCase());
-      await isWalletConnected();
-    });
+    const _startGame = async ( {code1, code2, code3, code4} ) => {
+        try {
+            // toast.loading("Executing...", { duration: 5000 });
+            const tx = prepareContractCall({
+                contract: CONTRACT,
+                method: "startGame",
+                params: {code1, code2, code3, code4},
+            });
+            const { transactionHash } = await sendTransaction({
+                transaction: tx,
+                account: activeAccount,
+            });
+            console.log({ transactionHash });
+            // toast.success("Transaction successful!");
+            return true;
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-    if (accounts.length) {
-      setGlobalState("connectedAccount", accounts[0]?.toLowerCase());
-      return true;
-    } else {
-      //   alert("Please connect wallet.");
-      console.log("No accounts found.");
-      return false;
-    }
-  } catch (error) {
-    reportError(error);
-  }
-};
-const getContract = async () => {
-  const connectedAccount = getGlobalState("connectedAccount");
+    const _makeGuess = async ({ code1, code2, code3, code4 }) => {
+        try {
+            // toast.loading("Executing...", { duration: 5000 });
+            const tx = prepareContractCall({
+                contract: CONTRACT,
+                method: "makeGuess",
+                params: [code1, code2, code3, code4],
+            });
+            const { transactionHash } = await sendTransaction({
+                transaction: tx,
+                account: activeAccount,
+            });
+            console.log({ transactionHash });
+            // toast.success("Transaction successful!");
+            return true;
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-  if (connectedAccount) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    // const provider = new ethers.JsonRpcProvider("");
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(contractAddress, contractAbi, signer);
-    return contract;
-  } else {
-    return getGlobalState("contract");
-  }
-};
+    const _setCodeMakerAddress = async () => {
+        try {
+            // toast.loading("Executing...", { duration: 5000 });
+            const tx = prepareContractCall({
+                contract: CONTRACT,
+                method: "setCodemaker",
+            });
+            const { transactionHash } = await sendTransaction({
+                transaction: tx,
+                account: activeAccount,
+            });
+            console.log({ transactionHash });
+            // toast.success("Transaction successful!");
+            return true;
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-const _startGame = async ({ code1, code2, code3, code4 }) => {
-  console.log("testing code ", code1, code2, code3, code4);
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    // const connectedAccount = getGlobalState("connectedAccount");
-    const contract = await getContract();
-    console.log("Code ", [code1, code2, code3, code4]);
-    const start = await contract.startGame([code1, code2, code3, code4]);
-    console.log("Created start Game:", start);
-    await start.wait();
-    return true;
-  } catch (error) {
-    console.log(error);
-    reportError(error);
-  }
-};
+    const _setCodeBreakerAddress = async () => {
+        try {
+            // toast.loading("Executing...", { duration: 5000 });
+            const tx = prepareContractCall({
+                contract: CONTRACT,
+                method: "setCodebreaker",
+            });
+            const { transactionHash } = await sendTransaction({
+                transaction: tx,
+                account: activeAccount,
+            });
+            console.log({ transactionHash });
+            // toast.success("Transaction successful!");
+            return true;
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-const _makeGuess = async ({ code1, code2, code3, code4 }) => {
-  console.log("testing code ", code1, code2, code3, code4);
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    // const connectedAccount = getGlobalState("connectedAccount");
-    const contract = await getContract();
-    console.log("Code ", [code1, code2, code3, code4]);
-    const start = await contract.makeGuess([code1, code2, code3, code4]);
-    console.log("Created start Game:", start);
-    await start.wait();
-    return true;
-  } catch (error) {
-    console.log(error);
-    reportError(error);
-  }
-};
+    const getCodemaker = async () => {
+        try {
+            const { data: maker } = codemakerData;
+            setGlobalState("maker", maker);
+            if (maker === "0x0000000000000000000000000000000000000000") {
+                setGlobalState("ismaker", false);
+                return false;
+            } else {
+                setGlobalState("ismaker", true);
+                return true;
+            }
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-const setCodeMakerAddress = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const connectedAccount = getGlobalState("connectedAccount");
-    const contract = await getContract();
-    console.log("connected account ", connectedAccount);
-    const codemaker = await contract.setCodemaker();
-    console.log(" code maker address:", codemaker);
-    await codemaker.wait();
-    return true;
-  } catch (error) {
-    console.log(error);
-    reportError(error);
-  }
-};
-const setCodeBreakerAddress = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const connectedAccount = getGlobalState("connectedAccount");
-    const contract = await getContract();
-    console.log("connected account ", connectedAccount);
-    const breaker = await contract.setCodebreaker();
+    const getCodebreaker = async () => {
+        try {
+            const { data: breaker } = codebreakerData;
+            setGlobalState("breaker", breaker);
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-    console.log("code breaker address:", breaker);
-    await breaker.wait().then((res) => {
-      console.log("result :", res);
-    });
-    return true;
-  } catch (error) {
-    console.log(error);
-    reportError(error);
-  }
-};
+    const checkActiveGame = async () => {
+        try {
+            const { data: active } = gameActiveData;
+            setGlobalState("activegame", active);
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-const setCodebreaker = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const connectedAccount = getGlobalState("connectedAccount");
-    const contract = await getContract();
-    console.log("connected account ", connectedAccount);
-    const codemaker = await contract.setCodebreaker();
-    console.log("code breaker address:", codemaker);
-  } catch (error) {
-    console.log(error);
-    reportError(error);
-  }
-};
+    const getcodemakerscore = async () => {
+        try {
+            const { data: makerscore } = makerScoreData;
+            setGlobalState("makerscore", Number(makerscore));
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-const setCodemaker = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const connectedAccount = getGlobalState("connectedAccount");
-    const contract = await getContract();
-    console.log("connected account ", connectedAccount);
-    const codemaker = await contract.setCodemaker();
-    console.log("code breaker address:", codemaker);
-  } catch (error) {
-    console.log(error);
-    reportError(error);
-  }
-};
-const getCodemaker = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const contract = await getContract();
-    const maker = await contract.codemaker();
-    console.log("maker", maker);
-    setGlobalState("maker", maker);
-    if (maker === "0x0000000000000000000000000000000000000000") {
-      setGlobalState("ismaker", false);
-      return false;
-    } else {
-      setGlobalState("ismaker", true);
-      return true;
-    }
-  } catch (error) {
-    reportError(error.message);
-  }
-};
-const getCodebreaker = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const contract = await getContract();
-    const breaker = await contract.codebreaker();
-    setGlobalState("breaker", breaker);
-    console.log("breaker", breaker);
-  } catch (error) {
-    reportError(error.message);
-  }
-};
+    const getcodebreakerscore = async () => {
+        try {
+            const { data: breakerscore } = breakerScoreData;
+            setGlobalState("breakerscore", Number(breakerscore));
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-const checkActiveGame = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const contract = await getContract();
-    const active = await contract.gameActive();
-    console.log("activegame", active);
-    setGlobalState("activegame", active);
-  } catch (error) {
-    reportError(error.message);
-  }
-};
+    const getRole = async () => {
+        try {
+            const { data: maker } = codemakerData;
+            const { data: breaker } = codebreakerData;
+            if (activeAccount.address.toLowerCase() === maker.toLowerCase()) {
+                return "codeMaker";
+            }
+            if (activeAccount.address.toLowerCase() === breaker.toLowerCase()) {
+                return "codeBreaker";
+            }
+            return null;
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-const getcodemakerscore = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const contract = await getContract();
-    const makerscore = await contract.getMakerScore();
-    console.log("makerscore", Number(makerscore));
-    setGlobalState("makerscore", Number(makerscore));
-  } catch (error) {
-    reportError(error.message);
-  }
-};
+    const _getLatestFeedback = async () => {
+        try {
+            const { data: feedback } = latestFeedbackData;
+            const feedbacks = feedback
+                ? [feedback.blackPegs.toString(), feedback.whitePegs.toString()]
+                : [0, 0];
+            console.log("feedback: ", feedbacks);
+            return feedback;
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-const getcodebreakerscore = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const contract = await getContract();
-    const breakerscore = await contract.getBreakerScore();
-    console.log("breakerscore", Number(breakerscore));
-    setGlobalState("breakerscore", Number(breakerscore));
-  } catch (error) {
-    reportError(error.message);
-  }
-};
+    const _getAllGuessesAndFeedback = async () => {
+        try {
+            const { data: allGuesses } = allGuessesData;
+            const { data: feedback } = allFeedbackData;
+            const allFeedback = feedback.map((fb) => [fb[0], fb[1]]);
+            console.log("all guesses and feedback: ", allGuesses, allFeedback);
+            return { allGuesses, allFeedback };
+        } catch (error) {
+            // toast.error("Error fetching guesses and feedback");
+            console.error(error);
+            return { allGuesses: [], allFeedback: [] };
+        }
+    };
 
-const getRole = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const contract = await getContract();
-    const codemaker = await contract.codemaker();
-    const codebreaker = await contract.codebreaker();
-    if (account.toLowerCase() === codemaker.toLowerCase()) {
-      return "codeMaker";
-    }
-    if (account.toLowerCase() === codebreaker.toLowerCase()) {
-      return "codeBreaker";
-    }
-    return null;
-  } catch (error) {
-    reportError(error.message);
-  }
-};
+    const _getSecretCode = async () => {
+        try {
+            const { data: secretCode } = secretCodeData;
+            console.log("secret code: ", secretCode);
+            return secretCode;
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-const _getLatestFeedback = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const contract = await getContract();
-    const feedback = await contract.getLatestFeedback();
-    const feedbacks = feedback
-      ? [feedback.blackPegs.toString(), feedback.whitePegs.toString()]
-      : [0, 0];
-    console.log("feedback: ", feedbacks);
-    return feedback;
-  } catch (error) {
-    reportError(error.message);
-  }
-};
-const _getAllGuessesAndFeedback = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const contract = await getContract();
-    const allGuesses = await contract.getGuessesCodes();
-    const feedback = await contract.getAllFeedback();
+    const _getGuessesCodes = async () => {
+        try {
+            const { data: feedback } = guessesData;
+            const feedbacks = feedback
+                ? [feedback.blackPegs.toString(), feedback.whitePegs.toString()]
+                : [0, 0];
+            console.log("code guessess ...: ", feedbacks);
+            return feedback;
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-    const allFeedback = feedback.map((fb) => [fb[0], fb[1]]);
+    const getGuess = async () => {
+        try {
+            const { data: guess } = guessesData;
+            setGlobalState("guesses", guess);
+            console.log("guess: ", guess);
+            return guess;
+        } catch (error) {
+            // toast.error("Transaction failed!");
+            console.log({ error });
+            console.error(error);
+        }
+    };
 
-    console.log("all guesses and feedback: ", allGuesses, allFeedback);
-    return { allGuesses, allFeedback };
-  } catch (error) {
-    console.error("Error fetching guesses and feedback:", error);
-    return { allGuesses: [], allFeedback: [] };
-  }
-};
-
-const _getSecretCode = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const contract = await getContract();
-    const secretCode = await contract.getSecret();
-    console.log("secret code: ", secretCode);
-    return secretCode;
-  } catch (error) {
-    reportError(error.message);
-  }
-};
-
-const _getGuessesCodes = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const contract = await getContract();
-    const feedback = await contract.getAllGuesses();
-    const feedbacks = feedback
-      ? [feedback.blackPegs.toString(), feedback.whitePegs.toString()]
-      : [0, 0];
-    console.log("code guessess ...: ", feedbacks);
-    return feedback;
-    // if (feedback === 0) {
-    //   return false;
-    // } else {
-    //   return true;
-    // }
-  } catch (error) {
-    reportError(error.message);
-  }
+    return (
+        <ContractContext.Provider
+            value={{
+                activeAccount,
+                _startGame,
+                _makeGuess,
+                _setCodeMakerAddress,
+                _setCodeBreakerAddress,
+                getCodemaker,
+                getCodebreaker,
+                checkActiveGame,
+                getcodebreakerscore,
+                getcodemakerscore,
+                getRole,
+                _getLatestFeedback,
+                _getAllGuessesAndFeedback,
+                _getSecretCode,
+                _getGuessesCodes,
+                getGuess
+            }}
+        >
+            {children}
+        </ContractContext.Provider>
+    );
 };
 
-const getGuess = async () => {
-  try {
-    if (!ethereum) return alert("Please install Metamask");
-    const contract = await getContract();
-    const guesses = await contract.getGuessesCodes();
-    console.log("guesses", guesses);
-    setGlobalState("guesses", guesses);
-  } catch (error) {
-    reportError(error.message);
-  }
-};
+const useContractContext = () => useContext(ContractContext);
 
-const reportError = (error) => {
-  console.log(error.message);
-  throw new Error("Error", error);
-};
-
-export {
-  connectWallet,
-  isWalletConnected,
-  getContract,
-  getCodemaker,
-  _makeGuess,
-  _startGame,
-  setCodeMakerAddress,
-  setCodeBreakerAddress,
-  getGuess,
-  checkActiveGame,
-  _getLatestFeedback,
-  _getGuessesCodes,
-  setCodebreaker,
-  setCodemaker,
-  getRole,
-  _getAllGuessesAndFeedback,
-  _getSecretCode,
-  getCodebreaker,
-  getcodebreakerscore,
-  getcodemakerscore,
-};
+export { ContractProvider, useContractContext };

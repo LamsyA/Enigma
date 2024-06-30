@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {
-  _makeGuess,
-  _getLatestFeedback,
-  _getAllGuessesAndFeedback,
-  _getSecretCode,
-  getcodebreakerscore,
-  getcodemakerscore,
-  getCodebreaker,
-  getCodemaker,
-} from "../store/wallet";
+// import {
+//   _makeGuess,
+//   _getLatestFeedback,
+//   _getAllGuessesAndFeedback,
+//   _getSecretCode,
+//   getcodebreakerscore,
+//   getcodemakerscore,
+//   getCodebreaker,
+//   getCodemaker,
+// } from "../store/wallet";
 import { COLORS, NUM_ROWS, CODE_LENGTH } from "../store/lib";
+import { useContractContext } from "../store/wallet";
+import { ClipLoader } from "react-spinners";
 
 const GuessingTable = ({
   secretCode,
@@ -19,6 +21,17 @@ const GuessingTable = ({
   gameWon,
   setGameWon,
 }) => {
+  const {
+    _makeGuess,
+    _getLatestFeedback,
+    _getAllGuessesAndFeedback,
+    _getSecretCode,
+    getcodebreakerscore,
+    getcodemakerscore,
+    getCodebreaker,
+    getCodemaker,
+  } = useContractContext();
+  
   const [guesses, setGuesses] = useState(() =>
     Array.from({ length: NUM_ROWS }, () =>
       Array.from({ length: CODE_LENGTH }, () => null)
@@ -34,6 +47,9 @@ const GuessingTable = ({
     rowIndex: null,
     pegIndex: null,
   });
+
+  const [loadingCheck, setLoadingCheck] = useState(false);
+  const [loadingRefresh, setLoadingRefresh] = useState(false);
 
   const handlePegClick = (rowIndex, pegIndex) => {
     if (rowIndex !== currentRow || gameOver) return;
@@ -89,6 +105,7 @@ const GuessingTable = ({
       code3: convertedGuess[2],
       code4: convertedGuess[3],
     });
+    setLoadingCheck(true);
 
     if (result) {
       fetchLatestFeedback();
@@ -100,10 +117,13 @@ const GuessingTable = ({
     } else {
       console.log("Failed to submit guess");
     }
+    setLoadingCheck(false);
   };
 
   const refreshBoard = async () => {
     try {
+      setLoadingRefresh(true);
+
       const { allGuesses, allFeedback } = await _getAllGuessesAndFeedback();
       const secretCodeFromContract = await _getSecretCode();
 
@@ -126,11 +146,11 @@ const GuessingTable = ({
       const newFeedback = Array.from({ length: NUM_ROWS }, (_, rowIndex) =>
         rowIndex < allFeedback.length
           ? Array.from({ length: CODE_LENGTH }, (_, i) => {
-              if (i < allFeedback[rowIndex][0]) return "black";
-              if (i < allFeedback[rowIndex][0] + allFeedback[rowIndex][1])
-                return "white";
-              return null;
-            })
+            if (i < allFeedback[rowIndex][0]) return "black";
+            if (i < allFeedback[rowIndex][0] + allFeedback[rowIndex][1])
+              return "white";
+            return null;
+          })
           : Array(CODE_LENGTH).fill(null)
       );
       setFeedback(newFeedback);
@@ -144,6 +164,8 @@ const GuessingTable = ({
 
       await getCodemaker();
       await getCodebreaker();
+
+      setLoadingRefresh(false);
     } catch (error) {
       console.error("Error refreshing board:", error.message);
     }
@@ -195,8 +217,8 @@ const GuessingTable = ({
                     fb === "black"
                       ? "#000"
                       : fb === "white"
-                      ? "#f5f5f5"
-                      : "#d1d5db",
+                        ? "#f5f5f5"
+                        : "#d1d5db",
                 }}
               ></div>
             ))}
@@ -208,13 +230,13 @@ const GuessingTable = ({
         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
         disabled={gameOver}
       >
-        Check
+        {loadingCheck ? <ClipLoader color="white" size={16}/> : "Check"}
       </button>
       <button
         onClick={refreshBoard}
         className="ml-2 mt-4 px-4 py-2 justify-center items-center bg-yellow-600 text-white rounded hover:bg-yellow-800"
       >
-        Refresh
+        {loadingRefresh ? <ClipLoader color="white" size={16}/> : "Refresh"}
       </button>
       {gameOver && (
         <div className="mt-4 text-center">

@@ -1,25 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { useGlobalState } from "../store/Data";
-import {
-  setCodebreaker,
-  setCodemaker,
-  checkActiveGame,
-  getRole,
-} from "../store/wallet";
+import { useContractContext } from "../store/wallet";
+import { ClipLoader } from "react-spinners";
+// import {
+//   setCodebreaker,
+//   setCodemaker,
+//   checkActiveGame,
+//   getRole,
+// } from "../store/wallet";
 
 const RoleSelection = ({ setRole }) => {
+  const { _setCodeBreakerAddress, _setCodeMakerAddress, checkActiveGame, getRole } = useContractContext();
   const [, setActivegame] = useGlobalState("activegame");
+  const [makerLoading, setMakerLoading] = useState(false);
+  const [breakerLoading, setBreakerLoading] = useState(false);
 
   const handleRoleSelection = async (role) => {
     if (role === "codeMaker") {
-      await setCodemaker();
+      setMakerLoading(true);
+      await _setCodeMakerAddress();
     } else if (role === "codeBreaker") {
-      await setCodebreaker();
+      setBreakerLoading(true);
+      await _setCodeBreakerAddress();
     }
-
     const gameActive = await checkActiveGame();
     setActivegame(gameActive);
     setRole(role);
+    setMakerLoading(false);
+    setBreakerLoading(false);
   };
 
   return (
@@ -31,15 +39,17 @@ const RoleSelection = ({ setRole }) => {
         <h1 className="text-white mb-4 uppercase">Select Your Role</h1>
         <button
           onClick={() => handleRoleSelection("codeMaker")}
-          className="mt-4 px-4 uppercase py-2 hover:border-white hover:border-2  bg-blue-500 text-white rounded hover:bg-blue-700"
+          className="mt-4 px-4 uppercase py-2 w-40 hover:border-white hover:border-2  bg-blue-500 text-white rounded hover:bg-blue-700"
         >
-          Code Maker
+          {makerLoading ?
+          <ClipLoader color="white" size={16}/>
+          : "Code Maker"}
         </button>
         <button
           onClick={() => handleRoleSelection("codeBreaker")}
-          className="mt-4 px-4 uppercase py-2 bg-blue-500 hover:border-green-400 hover:border-2  text-white rounded hover:bg-blue-700"
+          className="mt-4 px-4 uppercase py-2 w-40 bg-blue-500 hover:border-green-400 hover:border-2  text-white rounded hover:bg-blue-700"
         >
-          Code Breaker
+          {breakerLoading ? <ClipLoader color="white" size={16}/> : "Code Breaker"}
         </button>
       </div>
     </div>
