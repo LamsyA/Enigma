@@ -31,7 +31,7 @@ const SecretCodeSetter = ({ setSecretCode, setIsSettingSecretCode }) => {
       const convertedSecretCode = secretCode.map((color) => {
         return Object.keys(COLORS).find((key) => COLORS[key] === color);
       });
-      
+
       _startGame({
         code1: convertedSecretCode[0],
         code2: convertedSecretCode[1],
@@ -45,7 +45,7 @@ const SecretCodeSetter = ({ setSecretCode, setIsSettingSecretCode }) => {
       setLoading(false);
     } else {
       toast("Please select a color for all pegs in the secret code.", {
-        position: "top-center"
+        position: "top-center",
       });
     }
   };
@@ -88,7 +88,7 @@ const SecretCodeSetter = ({ setSecretCode, setIsSettingSecretCode }) => {
         onClick={handleSecretCodeSubmit}
         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
       >
-        {loading ? <ClipLoader color="white" size={16}/> : "Set Secret Code"}
+        {loading ? <ClipLoader color="white" size={16} /> : "Set Secret Code"}
       </button>
     </div>
   );
