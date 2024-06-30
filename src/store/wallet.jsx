@@ -3,6 +3,7 @@ import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { CONTRACT } from "../utils/const";
 import { prepareContractCall, sendTransaction } from "thirdweb";
 import { getGlobalState, setGlobalState } from "./Data";
+import { toast } from "react-toastify";
 // import toast from "react-toastify";
 
 const ContractContext = createContext({
@@ -75,7 +76,7 @@ const ContractProvider = ({ children }) => {
             const tx = prepareContractCall({
                 contract: CONTRACT,
                 method: "startGame",
-                params: {code1, code2, code3, code4},
+                params: [code1,code2,code3,code4],
             });
             const { transactionHash } = await sendTransaction({
                 transaction: tx,
@@ -125,7 +126,7 @@ const ContractProvider = ({ children }) => {
                 account: activeAccount,
             });
             console.log({ transactionHash });
-            // toast.success("Transaction successful!");
+            toast.success("Codemaker address set!");
             return true;
         } catch (error) {
             // toast.error("Transaction failed!");
@@ -146,7 +147,7 @@ const ContractProvider = ({ children }) => {
                 account: activeAccount,
             });
             console.log({ transactionHash });
-            // toast.success("Transaction successful!");
+            toast.success("Codebreaker address set!");
             return true;
         } catch (error) {
             // toast.error("Transaction failed!");

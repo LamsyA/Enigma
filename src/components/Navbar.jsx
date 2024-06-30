@@ -11,12 +11,12 @@ const Navbar = () => {
     const address = account?.address;
     return (
         <div className="sticky top-0 z-50">
-            <div className="relative w-4/5 flex md:justify-center justify-between items-center py-4 mx-auto ">
+            <div className="relative flex md:justify-center justify-between items-center px-32 py-4 mx-auto ">
                 <div className="md:flex-[0.5] flex-initial justify-center items-center">
                     <a href="/">
                         <div className="flex items-center space-x-2">
                             <img className=" w-6 cursor-pointer" src={nftLogo} alt="Logo" />
-                            <p className="text-xs font-bold text-gray-300 uppercase">
+                            <p className="font-bold text-gray-300 uppercase">
                                 mastermind
                             </p>
                         </div>

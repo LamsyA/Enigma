@@ -11,7 +11,6 @@ const Leaderboard = () => {
     { name: "Player1", score: 20000 },
     { name: "Player2", score: 15000 },
     { name: "Player3", score: 14590 },
-    { name: "Player4", score: 14000 },
     { name: "Player5", score: 12000 },
     {
       name: `${maker?.slice(0, 5)}...${maker?.slice(-5, -1)}` || "codemaker",
@@ -29,7 +28,7 @@ const Leaderboard = () => {
     .map((player, index) => ({ ...player, position: index + 1 }));
 
   return (
-    <div className="w-full max-w-md mx-auto border border-white bg-[#0F1116] rounded-lg shadow-lg mt-8">
+    <div className="w-full max-w-md mx-auto border border-white bg-[#0F1116] rounded-2xl shadow-lg mt-8">
       <h2 className="text-center border-b rounded-full shadow-md shadow-zinc-500 text-2xl font-bold text-yellow-600 p-4 border-gray-300">
         Leaderboard
       </h2>

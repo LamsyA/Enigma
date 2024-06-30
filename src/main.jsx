@@ -5,6 +5,7 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { ThirdwebProvider } from "thirdweb/react";
 import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import { ContractProvider } from "./store/wallet";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -13,7 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <ThirdwebProvider>
         <ContractProvider>
           <App />
-          {/* <ToastContainer /> */}
+          <ToastContainer />
         </ContractProvider>
       </ThirdwebProvider>
     </BrowserRouter>

@@ -57,8 +57,8 @@ const Hero = () => {
           <div className="relative p-10 rounded-lg shadow-lg mt-10">
             <div className="absolute left-1/2 transform cursor-pointer -translate-x-1/2 flex items-center space-x-2 mt-32 z-10">
               <h2
-                className="uppercase italic border-4 border-r-fuchsia-400 border-l-fuchsia-400
-               border-b-purple-900 border-t-purple-900 text-4xl text-[#b5ba25] font-bold"
+                className="uppercase border-4 border-r-fuchsia-400 border-l-fuchsia-400
+               border-b-purple-900 border-t-purple-900 text-5xl text-[#b5ba25] font-bold"
               >
                 Mastermind
               </h2>
@@ -72,7 +72,7 @@ const Hero = () => {
             <div className="absolute inset-0 flex items-center justify-center text-center mt-60 space-y-50 p-4">
               <button
                 onClick={handleStartGame}
-                className="bg-yellow-600 text-white px-6 py-3 mt-6 rounded shadow hover:bg-blue-700 transition duration-200 z-20"
+                className="bg-yellow-600 font-medium text-white px-6 py-3 mt-6 rounded shadow hover:bg-blue-700 transition duration-200 z-20"
               >
                 Start Game
               </button>

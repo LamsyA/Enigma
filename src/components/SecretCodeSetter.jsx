@@ -4,6 +4,7 @@ import { useGlobalState } from "../store/Data";
 import { COLORS, CODE_LENGTH } from "../store/lib";
 import { useContractContext } from "../store/wallet";
 import { ClipLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 const SecretCodeSetter = ({ setSecretCode, setIsSettingSecretCode }) => {
   const { _startGame } = useContractContext();
@@ -43,16 +44,18 @@ const SecretCodeSetter = ({ setSecretCode, setIsSettingSecretCode }) => {
       setIsSettingSecretCode(activegame);
       setLoading(false);
     } else {
-      alert("Please select a color for all pegs in the secret code.");
+      toast("Please select a color for all pegs in the secret code.", {
+        position: "top-center"
+      });
     }
   };
 
   if (activegame) return null;
 
   return (
-    <div className="mb-4">
-      <div className="text-center mb-4">Set the Secret Code</div>
-      <div className="flex items-center justify-center space-x-4">
+    <div>
+      <div className="text-center mb-5">Set the Secret Code</div>
+      <div className="flex items-center justify-center space-x-4 mb-5">
         {secretCode.map((color, pegIndex) => (
           <div key={pegIndex} className="relative">
             <div

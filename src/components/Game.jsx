@@ -48,7 +48,7 @@ const Game = () => {
       className="min-h-screen flex items-center justify-center"
       style={{ backgroundColor: "#0F1116" }}
     >
-      <div className="p-4 bg-amber-800 shadow-lg rounded">
+      <div className="bg-amber-800 shadow-lg rounded px-10 py-10 text-center">
         {role === "codeMaker" && isSettingSecretCode ? (
           <SecretCodeSetter
             setSecretCode={setSecretCode}

@@ -35,7 +35,7 @@ const App = () => {
 	}, []);
 
 	return (
-		<div className="bg-[#0F1116]">
+		<div className="bg-[#0F1116] overflow-hidden">
 			<Navbar />
 			<Routes>
 				<Route path="/" exact element={<Hero />} />
