@@ -17,7 +17,7 @@ This project is a decentralized version of Mastermind, built on the Base network
 ## Live Project
 
 - [How to play the Game](https://www.youtube.com/watch?v=5jtcsBERDEQ&t=1s)
-- [Live Project Demo](https://mastermind-seven-lilac.vercel.app/)
+- [Project Live website link](https://mastermind-seven-lilac.vercel.app/)
 - [Contract Address](https://sepolia.basescan.org/address/0x94d297273ca3ab70952dee77a7093963a4a13880)
 - [Live Demo Video ](https://www.loom.com/share/404567cae20d445380d0fba4e1348438?sid=02482300-1b4a-4945-8211-2357383aa5cb)
 
