@@ -56,10 +56,10 @@ const GamePlay = () => {
         <Game />
       </div>
       <Leaderboard />
-      <div className="fixed top-24 left-32">
+      <div className="fixed top-32 left-12">
         <InfoBox title="Code Maker" address={maker} score={makerscore} />
       </div>
-      <div className="fixed top-24 right-32">
+      <div className="fixed top-32 right-12">
         <InfoBox title="Code Breaker" address={breaker} score={breakerscore} />
       </div>
       <div className="fixed top-[10%] left-[60%] items-center flex mr-4">
