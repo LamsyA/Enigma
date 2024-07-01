@@ -18,6 +18,15 @@ This project is a decentralized version of Mastermind, built on the Base network
 
 - [How to play the Game](https://www.youtube.com/watch?v=5jtcsBERDEQ&t=1s)
 - [Live Project](https://mastermind-seven-lilac.vercel.app/)
+- [Contract Address](https://sepolia.basescan.org/address/0x94d297273ca3ab70952dee77a7093963a4a13880)
+
+## Technologies Used
+
+- **Blockchain:** Base Network
+- **Smart Contracts:** Solidity, OpenZeppelin
+- **Frontend:** React
+- **Gasless Transactions:** Thirdweb Paymaster
+- **Bundler:** Transaction Bundling for efficiency
 
 ## How to Interact with the App
 
@@ -73,6 +82,10 @@ The smart contract handles:
 - **ScoreUpdated:** Emitted when scores are updated.
 - **CodebreakerSet:** Emitted when the Code Breaker role is set.
 - **CodemakerSet:** Emitted when the Code Maker role is set.
+
+## Paymaster and Bundler Integration
+
+Our project utilizes Thirdweb Paymaster for gasless transactions, enhancing user experience by eliminating the need for users to hold Ether for gas fees. This integration simplifies the onboarding process and ensures smooth gameplay without the hassle of managing transaction costs. Additionally, bundling transactions optimizes performance by reducing the number of transactions, making the game more efficient and cost-effective.
 
 ## License
 

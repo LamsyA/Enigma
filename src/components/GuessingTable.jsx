@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from "react";
-// import {
-//   _makeGuess,
-//   _getLatestFeedback,
-//   _getAllGuessesAndFeedback,
-//   _getSecretCode,
-//   getcodebreakerscore,
-//   getcodemakerscore,
-//   getCodebreaker,
-//   getCodemaker,
-// } from "../store/wallet";
 import { COLORS, NUM_ROWS, CODE_LENGTH } from "../store/lib";
 import { useContractContext } from "../store/wallet";
 import { ClipLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 const GuessingTable = ({
   secretCode,
@@ -68,28 +59,33 @@ const GuessingTable = ({
   };
 
   const fetchLatestFeedback = async () => {
-    const feedbackData = await _getLatestFeedback();
-    const [blackPegs, whitePegs] = feedbackData;
+    try {
+      const feedbackData = await _getLatestFeedback();
+      const [blackPegs, whitePegs] = feedbackData;
 
-    const currentFeedback = Array(CODE_LENGTH).fill(null);
-    for (let i = 0; i < blackPegs; i++) {
-      currentFeedback[i] = "black";
-    }
-    for (let i = blackPegs; i < blackPegs + whitePegs; i++) {
-      currentFeedback[i] = "white";
-    }
+      const currentFeedback = Array(CODE_LENGTH).fill(null);
+      for (let i = 0; i < blackPegs; i++) {
+        currentFeedback[i] = "black";
+      }
+      for (let i = blackPegs; i < blackPegs + whitePegs; i++) {
+        currentFeedback[i] = "white";
+      }
 
-    const newFeedback = [...feedback];
-    newFeedback[currentRow] = currentFeedback;
-    setFeedback(newFeedback);
+      const newFeedback = [...feedback];
+      newFeedback[currentRow] = currentFeedback;
+      setFeedback(newFeedback);
 
-    if (blackPegs === CODE_LENGTH) {
-      setGameOver(true);
-      setGameWon(true);
-    } else if (currentRow < NUM_ROWS - 1) {
-      setCurrentRow(currentRow + 1);
-    } else {
-      setGameOver(true);
+      if (blackPegs === CODE_LENGTH) {
+        setGameOver(true);
+        setGameWon(true);
+        toast.success("Game won!");
+      } else if (currentRow < NUM_ROWS - 1) {
+        setCurrentRow(currentRow + 1);
+      } else {
+        setGameOver(true);
+      }
+    } catch (error) {
+      console.error("Error fetching latest feedback:", error);
     }
   };
 
@@ -101,22 +97,22 @@ const GuessingTable = ({
       return Object.keys(COLORS).find((key) => COLORS[key] === color);
     });
 
-    const result = await _makeGuess({
-      code1: convertedGuess[0],
-      code2: convertedGuess[1],
-      code3: convertedGuess[2],
-      code4: convertedGuess[3],
-    });
+    try {
+      const result = await _makeGuess({
+        code1: convertedGuess[0],
+        code2: convertedGuess[1],
+        code3: convertedGuess[2],
+        code4: convertedGuess[3],
+      });
 
-    if (result) {
-      fetchLatestFeedback();
-      await getcodebreakerscore();
-      await getcodemakerscore();
-      await getCodebreaker();
-      await getCodemaker();
-      await refreshBoard();
-    } else {
-      console.log("Failed to submit guess");
+      if (result) {
+        await fetchLatestFeedback();
+        await refreshBoard();
+      } else {
+        console.log("Failed to submit guess");
+      }
+    } catch (error) {
+      console.error("Error making guess:", error);
     }
 
     setLoadingCheck(false);
@@ -125,15 +121,13 @@ const GuessingTable = ({
   const refreshBoard = async () => {
     try {
       setLoadingRefresh(true);
-      console.log("whyy?");
 
       const { allGuesses, allFeedback } = await _getAllGuessesAndFeedback();
       const secretCodeFromContract = await _getSecretCode();
 
-      // Convert the secret code from numeric values to color strings
       const convertedSecretCode = secretCodeFromContract.map(
         (colorKey) => COLORS[colorKey]
-      );  
+      );
 
       const newGuesses = Array.from({ length: NUM_ROWS }, (_, rowIndex) =>
         rowIndex < allGuesses.length
@@ -145,27 +139,25 @@ const GuessingTable = ({
       const newFeedback = Array.from({ length: NUM_ROWS }, (_, rowIndex) =>
         rowIndex < allFeedback.length
           ? Array.from({ length: CODE_LENGTH }, (_, i) => {
-            if (i < allFeedback[rowIndex][0]) return "black";
-            if (i < allFeedback[rowIndex][0] + allFeedback[rowIndex][1])
-              return "white";
-            return null;
-          })
+              if (i < allFeedback[rowIndex][0]) return "black";
+              if (i < allFeedback[rowIndex][0] + allFeedback[rowIndex][1])
+                return "white";
+              return null;
+            })
           : Array(CODE_LENGTH).fill(null)
       );
       setFeedback(newFeedback);
 
-      // Set the current row to the next row after the last guess
       setCurrentRow(allGuesses.length);
       setSecretCode(convertedSecretCode);
       await getcodebreakerscore();
       await getcodemakerscore();
-
       await getCodemaker();
       await getCodebreaker();
 
       setLoadingRefresh(false);
     } catch (error) {
-      console.error("Error refreshing board:", error.message);
+      console.error("Error refreshing board:", error);
     }
   };
 
@@ -215,8 +207,8 @@ const GuessingTable = ({
                     fb === "black"
                       ? "#000"
                       : fb === "white"
-                        ? "#f5f5f5"
-                        : "#d1d5db",
+                      ? "#f5f5f5"
+                      : "#d1d5db",
                 }}
               ></div>
             ))}
@@ -239,7 +231,7 @@ const GuessingTable = ({
       {gameOver && (
         <div className="mt-4 text-center">
           {gameWon ? (
-            <div className="text-green-300 text-pretty font-bold  text-xl">
+            <div className="text-green-300 text-pretty font-bold text-xl">
               🎖️ You won! Congratulations! NFT Minted
             </div>
           ) : (
