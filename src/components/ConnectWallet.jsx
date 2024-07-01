@@ -4,7 +4,8 @@ import { createWallet, inAppWallet } from "thirdweb/wallets";
 
 
 const ConnectWallet = () => {
-    const wallets = [inAppWallet(), createWallet("io.metamask")]
+    const wallets = [inAppWallet(), createWallet("com.coinbase.wallet")]
+    // const wallets = [inAppWallet(), createWallet("io.metamask")]
 
     return (
         <ConnectButton
