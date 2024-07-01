@@ -71,20 +71,12 @@ const ContractProvider = ({ children }) => {
 
   const _startGame = async ({ code1, code2, code3, code4 }) => {
     try {
-      console.log("All code .......", [
-        Number(code1),
-        Number(code2),
-        Number(code3),
-        Number(code4),
-      ]);
-
       const dataArray = [
         Number(code1),
         Number(code2),
         Number(code3),
         Number(code4),
       ];
-      // toast.loading("Executing...", { duration: 5000 });
       const tx = prepareContractCall({
         contract: CONTRACT,
         method: "startGame",
@@ -95,11 +87,10 @@ const ContractProvider = ({ children }) => {
         account: activeAccount,
       });
       console.log({ transactionHash });
-      // toast.success("Transaction successful!");
+      toast.success("Game started!");
       return true;
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      toast.error(error.message);
       console.error(error);
     }
   };
@@ -123,18 +114,16 @@ const ContractProvider = ({ children }) => {
         account: activeAccount,
       });
       console.log({ transactionHash });
-      // toast.success("Transaction successful!");
+      toast.success("Your guess is submitted! Now, refresh.");
       return true;
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      toast.error(error.message);
       console.error(error);
     }
   };
 
   const _setCodeMakerAddress = async () => {
     try {
-      // toast.loading("Executing...", { duration: 5000 });
       const tx = prepareContractCall({
         contract: CONTRACT,
         method: "setCodemaker",
@@ -147,15 +136,13 @@ const ContractProvider = ({ children }) => {
       toast.success("Codemaker address set!");
       return true;
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      toast.error(error.message);
       console.error(error);
     }
   };
 
   const _setCodeBreakerAddress = async () => {
     try {
-      // toast.loading("Executing...", { duration: 5000 });
       const tx = prepareContractCall({
         contract: CONTRACT,
         method: "setCodebreaker",
@@ -168,8 +155,7 @@ const ContractProvider = ({ children }) => {
       toast.success("Codebreaker address set!");
       return true;
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      toast.error(error.message);
       console.error(error);
     }
   };
@@ -186,8 +172,7 @@ const ContractProvider = ({ children }) => {
         return true;
       }
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      // toast.error(error.message);
       console.error(error);
     }
   };
@@ -197,8 +182,7 @@ const ContractProvider = ({ children }) => {
       const { data: breaker } = codebreakerData;
       setGlobalState("breaker", breaker);
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      // toast.error(error.message);
       console.error(error);
     }
   };
@@ -208,8 +192,7 @@ const ContractProvider = ({ children }) => {
       const { data: active } = gameActiveData;
       setGlobalState("activegame", active);
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      toast.error(error.message);
       console.error(error);
     }
   };
@@ -219,8 +202,7 @@ const ContractProvider = ({ children }) => {
       const { data: makerscore } = makerScoreData;
       setGlobalState("makerscore", Number(makerscore));
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      // toast.error(error.message);
       console.error(error);
     }
   };
@@ -230,8 +212,7 @@ const ContractProvider = ({ children }) => {
       const { data: breakerscore } = breakerScoreData;
       setGlobalState("breakerscore", Number(breakerscore));
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      // toast.error(error.message);
       console.error(error);
     }
   };
@@ -248,8 +229,7 @@ const ContractProvider = ({ children }) => {
       }
       return null;
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      // toast.error(error.message);
       console.error(error);
     }
   };
@@ -258,13 +238,13 @@ const ContractProvider = ({ children }) => {
     try {
       const { data: feedback } = latestFeedbackData;
       const feedbacks = feedback
-        ? [feedback.blackPegs.toString(), feedback.whitePegs.toString()]
-        : [0, 0];
-      console.log("feedback: ", feedbacks);
+      ? [feedback.blackPegs.toString(), feedback.whitePegs.toString()]
+      : [0, 0];
+      console.log("latest feedback: ", feedback);
+      console.log("latest feedback: ", feedbacks);
       return feedback;
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      // toast.error(error.message);
       console.error(error);
     }
   };
@@ -289,8 +269,7 @@ const ContractProvider = ({ children }) => {
       console.log("secret code: ", secretCode);
       return secretCode;
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      // toast.error(error.message);
       console.error(error);
     }
   };
@@ -301,11 +280,9 @@ const ContractProvider = ({ children }) => {
       const feedbacks = feedback
         ? [feedback.blackPegs.toString(), feedback.whitePegs.toString()]
         : [0, 0];
-      console.log("code guessess ...: ", feedbacks);
       return feedback;
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      // toast.error(error.message);
       console.error(error);
     }
   };
@@ -314,11 +291,9 @@ const ContractProvider = ({ children }) => {
     try {
       const { data: guess } = guessesData;
       setGlobalState("guesses", guess);
-      console.log("guess: ", guess);
       return guess;
     } catch (error) {
-      // toast.error("Transaction failed!");
-      console.log({ error });
+      // toast.error(error.message);
       console.error(error);
     }
   };

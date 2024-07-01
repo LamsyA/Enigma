@@ -31,7 +31,7 @@ const GuessingTable = ({
     getCodebreaker,
     getCodemaker,
   } = useContractContext();
-  
+
   const [guesses, setGuesses] = useState(() =>
     Array.from({ length: NUM_ROWS }, () =>
       Array.from({ length: CODE_LENGTH }, () => null)
@@ -94,6 +94,8 @@ const GuessingTable = ({
   };
 
   const handleCheck = async () => {
+    setLoadingCheck(true);
+
     const currentGuess = guesses[currentRow];
     const convertedGuess = currentGuess.map((color) => {
       return Object.keys(COLORS).find((key) => COLORS[key] === color);
@@ -105,7 +107,6 @@ const GuessingTable = ({
       code3: convertedGuess[2],
       code4: convertedGuess[3],
     });
-    setLoadingCheck(true);
 
     if (result) {
       fetchLatestFeedback();
@@ -117,12 +118,14 @@ const GuessingTable = ({
     } else {
       console.log("Failed to submit guess");
     }
+
     setLoadingCheck(false);
   };
 
   const refreshBoard = async () => {
     try {
       setLoadingRefresh(true);
+      console.log("whyy?");
 
       const { allGuesses, allFeedback } = await _getAllGuessesAndFeedback();
       const secretCodeFromContract = await _getSecretCode();
@@ -130,11 +133,7 @@ const GuessingTable = ({
       // Convert the secret code from numeric values to color strings
       const convertedSecretCode = secretCodeFromContract.map(
         (colorKey) => COLORS[colorKey]
-      );
-
-      // Logging to debug the structure of allGuesses and allFeedback
-      console.log("allGuesses:", allGuesses);
-      console.log("allFeedback:", allFeedback);
+      );  
 
       const newGuesses = Array.from({ length: NUM_ROWS }, (_, rowIndex) =>
         rowIndex < allGuesses.length
@@ -157,7 +156,6 @@ const GuessingTable = ({
 
       // Set the current row to the next row after the last guess
       setCurrentRow(allGuesses.length);
-      console.log("convertedSecretCode:", convertedSecretCode);
       setSecretCode(convertedSecretCode);
       await getcodebreakerscore();
       await getcodemakerscore();
@@ -227,16 +225,16 @@ const GuessingTable = ({
       ))}
       <button
         onClick={handleCheck}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+        className="mt-4 px-4 py-2 w-24 bg-blue-500 text-white rounded hover:bg-blue-700"
         disabled={gameOver}
       >
-        {loadingCheck ? <ClipLoader color="white" size={16}/> : "Check"}
+        {loadingCheck ? <ClipLoader color="white" size={16} /> : "Check"}
       </button>
       <button
         onClick={refreshBoard}
-        className="ml-2 mt-4 px-4 py-2 justify-center items-center bg-yellow-600 text-white rounded hover:bg-yellow-800"
+        className="ml-2 mt-4 px-4 py-2 w-24 justify-center items-center bg-yellow-600 text-white rounded hover:bg-yellow-800"
       >
-        {loadingRefresh ? <ClipLoader color="white" size={16}/> : "Refresh"}
+        {loadingRefresh ? <ClipLoader color="white" size={16} /> : "Refresh"}
       </button>
       {gameOver && (
         <div className="mt-4 text-center">

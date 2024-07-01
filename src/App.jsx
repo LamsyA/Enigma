@@ -21,7 +21,6 @@ const App = () => {
 
 	useEffect(() => {
 		const loadData = () => {
-			console.log("Blockchain loaded");
 			setLoaded(true);
 			activeAccount && checkActiveGame();
 			checkActiveGame();

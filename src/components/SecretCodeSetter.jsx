@@ -26,19 +26,19 @@ const SecretCodeSetter = ({ setSecretCode, setIsSettingSecretCode }) => {
     setColorPicker({ pegIndex: null });
   };
 
-  const handleSecretCodeSubmit = () => {
+  const handleSecretCodeSubmit = async () => {
     if (secretCode.every((color) => color !== null)) {
       const convertedSecretCode = secretCode.map((color) => {
         return Object.keys(COLORS).find((key) => COLORS[key] === color);
       });
 
-      _startGame({
+      setLoading(true);
+      await _startGame({
         code1: convertedSecretCode[0],
         code2: convertedSecretCode[1],
         code3: convertedSecretCode[2],
         code4: convertedSecretCode[3],
       });
-      setLoading(true);
 
       setSecretCode(secretCode);
       setIsSettingSecretCode(activegame);
@@ -86,7 +86,7 @@ const SecretCodeSetter = ({ setSecretCode, setIsSettingSecretCode }) => {
       </div>
       <button
         onClick={handleSecretCodeSubmit}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+        className="mt-4 px-4 py-2 bg-blue-500 text-sm font-medium w-38 text-white rounded hover:bg-blue-700"
       >
         {loading ? <ClipLoader color="white" size={16} /> : "Set Secret Code"}
       </button>

@@ -23,10 +23,10 @@ const RoleSelection = ({ setRole }) => {
   const handleRoleSelection = async (role) => {
     if (role === "codeMaker") {
       setMakerLoading(true);
-      _setCodeMakerAddress();
+      await _setCodeMakerAddress();
     } else if (role === "codeBreaker") {
       setBreakerLoading(true);
-      _setCodeBreakerAddress();
+      await _setCodeBreakerAddress();
     }
     const gameActive = await checkActiveGame();
     setActivegame(gameActive);
