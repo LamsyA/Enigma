@@ -17,8 +17,9 @@ This project is a decentralized version of Mastermind, built on the Base network
 ## Live Project
 
 - [How to play the Game](https://www.youtube.com/watch?v=5jtcsBERDEQ&t=1s)
-- [Live Project](https://mastermind-seven-lilac.vercel.app/)
+- [Live Project Demo](https://mastermind-seven-lilac.vercel.app/)
 - [Contract Address](https://sepolia.basescan.org/address/0x94d297273ca3ab70952dee77a7093963a4a13880)
+- [Live Demo Video ](https://www.loom.com/share/404567cae20d445380d0fba4e1348438?sid=02482300-1b4a-4945-8211-2357383aa5cb)
 
 ## Technologies Used
 
@@ -27,6 +28,14 @@ This project is a decentralized version of Mastermind, built on the Base network
 - **Frontend:** React
 - **Gasless Transactions:** Thirdweb Paymaster
 - **Bundler:** Transaction Bundling for efficiency
+
+## Paymaster and Bundler Integration
+
+Our project utilizes Thirdweb Paymaster for gasless transactions, enhancing user experience by eliminating the need for users to hold Ether for gas fees. This integration simplifies the onboarding process and ensures smooth gameplay without the hassle of managing transaction costs. Additionally, bundling transactions optimizes performance by reducing the number of transactions, making the game more efficient and cost-effective.
+
+## Thirdweb Smart Wallet
+
+The project also integrates the Thirdweb Smart Wallet, which allows users to sign in using their phone number, passkey, or email. This feature enhances accessibility and user experience, making it easier for players to participate in the game without the need for traditional wallet setups. The smart wallet ensures secure and seamless interactions with the game.
 
 ## How to Interact with the App
 
@@ -82,10 +91,6 @@ The smart contract handles:
 - **ScoreUpdated:** Emitted when scores are updated.
 - **CodebreakerSet:** Emitted when the Code Breaker role is set.
 - **CodemakerSet:** Emitted when the Code Maker role is set.
-
-## Paymaster and Bundler Integration
-
-Our project utilizes Thirdweb Paymaster for gasless transactions, enhancing user experience by eliminating the need for users to hold Ether for gas fees. This integration simplifies the onboarding process and ensures smooth gameplay without the hassle of managing transaction costs. Additionally, bundling transactions optimizes performance by reducing the number of transactions, making the game more efficient and cost-effective.
 
 ## License
 
